@@ -1,0 +1,25 @@
+# .github/workflows/check-source-branch.yml
+name: check-source-branch
+on:
+  pull_request:
+    branches: [main]
+
+jobs:
+  check:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Verify source branch
+        run: |
+          SOURCE="${{ github.head_ref }}"
+          echo "Source branch: $SOURCE"
+
+          # 許可するブランチのパターン
+          if [[ "$SOURCE" == "develop" ]] || \
+             [[ "$SOURCE" == release/* ]] || \
+             [[ "$SOURCE" == hotfix/* ]]; then
+            echo "✅ '$SOURCE' is allowed to merge into main"
+          else
+            echo "❌ '$SOURCE' is NOT allowed to merge into main"
+            echo "Allowed: develop, release/*, hotfix/*"
+            exit 1
+          fi

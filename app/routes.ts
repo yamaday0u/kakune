@@ -9,4 +9,5 @@ export default [
     route("items/:id", "routes/app-item-detail.tsx"),
     route("settings", "routes/app-settings.tsx"),
   ]),
+  route("api/trigger-cleanup", "routes/api.trriger-cleanup.ts"),
 ] satisfies RouteConfig;

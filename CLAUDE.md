@@ -35,7 +35,7 @@ kakune/
 ├── public/                   # 静的ファイル（アイコン画像など）
 ├── docs/
 │   └── requirements.md       # 要件定義・技術選定ドキュメント
-├── .env.local                # 環境変数（SUPABASE_URL, SUPABASE_PUBLISHABLE_DEFAULT_KEY）
+├── .env.local                # 環境変数
 ├── react-router.config.ts
 ├── vite.config.ts
 └── package.json
@@ -67,6 +67,12 @@ npm run dev        # 開発サーバー起動
 npm run build      # プロダクションビルド
 npm run typecheck  # 型チェック（react-router typegen + tsc）
 ```
+
+## Cron ジョブ
+
+- `vercel.json` で Vercel Cron を設定
+- `/api/trigger-cleanup` を **毎日 JST 00:00**（UTC 15:00）に実行
+- Vercel Cron は UTC 固定のため、JST に合わせるには `-9h` した UTC 時刻を指定する
 
 ## 実装指示
 
