@@ -1,0 +1,10 @@
+{
+  // 推奨拡張機能の通知
+  "extensions.ignoreRecommendations": false,
+
+  // Prettierの設定
+  "editor.defaultFormatter": "esbenp.prettier-vscode",
+  "editor.formatOnSave": true
+
+  // その他のVS Code設定は以下に記載する
+}
