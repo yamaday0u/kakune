@@ -25,18 +25,18 @@ function formatJapaneseDate(date: Date) {
 }
 
 const navItems = [
-  { to: "/app", label: "ホーム", icon: "🏠", end: true },
-  { to: "/app/history", label: "履歴", icon: "📊", end: false },
-  { to: "/app/settings", label: "設定", icon: "⚙️", end: false },
+  { to: "/app", label: "ホーム", icon: "🏠", end: true, disabled: false },
+  { to: "/app/history", label: "履歴", icon: "📊", end: false, disabled: true },
+  { to: "/app/settings", label: "設定", icon: "⚙️", end: false, disabled: false },
 ];
 
 export default function AppLayout() {
   const dateLabel = formatJapaneseDate(new Date());
 
   return (
-    <div className="min-h-screen bg-slate-50 flex flex-col max-w-lg mx-auto">
+    <div className="h-dvh bg-slate-50 flex flex-col max-w-lg mx-auto">
       {/* ヘッダー */}
-      <header className="flex items-center justify-between px-5 pt-12 pb-4 bg-slate-50">
+      <header className="shrink-0 flex items-center justify-between px-5 pt-[max(3rem,env(safe-area-inset-top))] pb-4 bg-slate-50">
         <h1 className="text-base font-medium text-slate-600">{dateLabel}</h1>
         <NavLink
           to="/app/settings"
@@ -53,24 +53,34 @@ export default function AppLayout() {
       </main>
 
       {/* ボトムナビゲーション */}
-      <nav className="bg-white border-t border-slate-100 safe-area-inset-bottom">
+      <nav className="shrink-0 bg-white border-t border-slate-100 pb-[env(safe-area-inset-bottom)]">
         <ul className="flex">
-          {navItems.map((item) => (
-            <li key={item.to} className="flex-1">
-              <NavLink
-                to={item.to}
-                end={item.end}
-                className={({ isActive }) =>
-                  `flex flex-col items-center justify-center gap-0.5 py-3 text-xs font-medium transition-colors min-h-[56px] ${
-                    isActive ? "text-slate-700" : "text-slate-400"
-                  }`
-                }
-              >
-                <span className="text-xl leading-none">{item.icon}</span>
-                <span>{item.label}</span>
-              </NavLink>
-            </li>
-          ))}
+          {navItems.map((item) =>
+            item.disabled ? (
+              <li key={item.to} className="flex-1">
+                <span className="flex flex-col items-center justify-center gap-0.5 py-3 min-h-[56px] text-slate-300 cursor-default select-none">
+                  <span className="text-xl leading-none">{item.icon}</span>
+                  <span className="text-xs font-medium">{item.label}</span>
+                  <span className="text-[9px] leading-none -mt-0.5">Coming soon</span>
+                </span>
+              </li>
+            ) : (
+              <li key={item.to} className="flex-1">
+                <NavLink
+                  to={item.to}
+                  end={item.end}
+                  className={({ isActive }) =>
+                    `flex flex-col items-center justify-center gap-0.5 py-3 text-xs font-medium transition-colors min-h-[56px] ${
+                      isActive ? "text-slate-700" : "text-slate-400"
+                    }`
+                  }
+                >
+                  <span className="text-xl leading-none">{item.icon}</span>
+                  <span>{item.label}</span>
+                </NavLink>
+              </li>
+            )
+          )}
         </ul>
       </nav>
     </div>
