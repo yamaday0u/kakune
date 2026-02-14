@@ -1,5 +1,5 @@
 import { data, redirect, useFetcher, useLoaderData, Link } from "react-router";
-import { useRef, useState } from "react";
+import { useRef, useState, useEffect } from "react";
 import type { Route } from "./+types/app-home";
 import { createSupabaseClient } from "~/lib/supabase.server";
 
@@ -63,7 +63,17 @@ export async function loader({ request }: Route.LoaderArgs) {
     hasPhotoToday: photoMap[item.id] ?? false,
   }));
 
-  return data({ checkItems }, { headers: responseHeaders });
+  // サインアップ直後の歓迎フラッシュを読み取り、即クリア
+  const cookie = request.headers.get("Cookie") ?? "";
+  const showWelcome = cookie.includes("flash_welcome=1");
+  if (showWelcome) {
+    responseHeaders.append(
+      "Set-Cookie",
+      "flash_welcome=; Path=/; Max-Age=0; SameSite=Lax"
+    );
+  }
+
+  return data({ checkItems, showWelcome }, { headers: responseHeaders });
 }
 
 export async function action({ request }: Route.ActionArgs) {
@@ -347,11 +357,37 @@ function CheckItemCard({ item }: { item: CheckItem }) {
   );
 }
 
+function WelcomeToast() {
+  const [visible, setVisible] = useState(true);
+
+  useEffect(() => {
+    const timer = setTimeout(() => setVisible(false), 3500);
+    return () => clearTimeout(timer);
+  }, []);
+
+  return (
+    <div
+      className={`fixed top-[max(5rem,calc(env(safe-area-inset-top)+3.5rem))] left-1/2 -translate-x-1/2 z-50 transition-all duration-500 ${
+        visible ? "opacity-100 translate-y-0" : "opacity-0 -translate-y-2 pointer-events-none"
+      }`}
+    >
+      <div className="flex items-center gap-3 bg-white rounded-2xl shadow-lg px-5 py-3.5 min-w-[240px]">
+        <span className="text-2xl">🎉</span>
+        <div>
+          <p className="text-sm font-medium text-slate-700">ようこそ、かくねへ！</p>
+          <p className="text-xs text-slate-400 mt-0.5">確認項目を追加して使い始めましょう</p>
+        </div>
+      </div>
+    </div>
+  );
+}
+
 export default function AppHome() {
-  const { checkItems } = useLoaderData<typeof loader>();
+  const { checkItems, showWelcome } = useLoaderData<typeof loader>();
 
   return (
     <div className="flex flex-col gap-3 pt-2">
+      {showWelcome && <WelcomeToast />}
       {checkItems.length === 0 ? (
         <div className="flex flex-col items-center justify-center text-center py-16 px-6 gap-4">
           <span className="text-5xl">📋</span>

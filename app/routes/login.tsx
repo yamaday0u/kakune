@@ -36,6 +36,10 @@ export async function action({ request }: Route.ActionArgs) {
         { headers: responseHeaders }
       );
     }
+    responseHeaders.append(
+      "Set-Cookie",
+      "flash_welcome=1; Path=/; Max-Age=60; SameSite=Lax"
+    );
     return redirect("/app", { headers: responseHeaders });
   }
 
