@@ -1,0 +1,6 @@
+{
+  "recommendations": [
+    "github.copilot", // GitHub Copilot
+    "esbenp.prettier-vscode" // Prettier - Code formatter
+  ]
+}

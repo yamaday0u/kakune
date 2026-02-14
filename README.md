@@ -43,6 +43,9 @@ npm ci
       "Bash(git add:*)",
       "Bash(git commit:*)",
       "Bash(git push:*)"
+    ],
+    "ask": [
+      "Bash(git push:*)"
     ]
   }
 }
