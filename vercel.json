@@ -2,7 +2,7 @@
   "crons": [
     {
       "path": "/api/trigger-cleanup",
-      "schedule": "0 15 * * *"
+      "schedule": "0 0 * * *"
     }
   ]
 }
