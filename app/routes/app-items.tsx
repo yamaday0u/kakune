@@ -168,7 +168,7 @@ function AddItemForm({ error }: { error?: string }) {
             type="text"
             required
             placeholder="例: 玄関の鍵"
-            className="flex-1 rounded-xl border border-slate-200 bg-slate-50 px-4 py-3 text-base text-slate-700 outline-none focus:border-slate-400 focus:ring-2 focus:ring-slate-200 transition"
+            className="flex-1 min-w-0 rounded-xl border border-slate-200 bg-slate-50 px-4 py-3 text-base text-slate-700 outline-none focus:border-slate-400 focus:ring-2 focus:ring-slate-200 transition"
           />
         </div>
         {error && (
