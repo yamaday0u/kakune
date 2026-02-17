@@ -1,5 +1,11 @@
 import { useState } from "react";
-import { data, redirect, Form, useActionData, useNavigation } from "react-router";
+import {
+  data,
+  redirect,
+  Form,
+  useActionData,
+  useNavigation,
+} from "react-router";
 import type { Route } from "./+types/login";
 import { createSupabaseClient } from "~/lib/supabase.server";
 
@@ -33,22 +39,19 @@ export async function action({ request }: Route.ActionArgs) {
     if (error) {
       return data(
         { error: error.message, intent },
-        { headers: responseHeaders }
+        { headers: responseHeaders },
       );
     }
     responseHeaders.append(
       "Set-Cookie",
-      "flash_welcome=1; Path=/; Max-Age=60; SameSite=Lax"
+      "flash_welcome=1; Path=/; Max-Age=60; SameSite=Lax",
     );
     return redirect("/app", { headers: responseHeaders });
   }
 
   const { error } = await supabase.auth.signInWithPassword({ email, password });
   if (error) {
-    return data(
-      { error: error.message, intent },
-      { headers: responseHeaders }
-    );
+    return data({ error: error.message, intent }, { headers: responseHeaders });
   }
   return redirect("/app", { headers: responseHeaders });
 }
@@ -68,10 +71,7 @@ export default function Login() {
     <div className="min-h-screen bg-slate-50 flex flex-col">
       {/* 戻るリンク */}
       <div className="px-6 pt-10">
-        <a
-          href="/"
-          className="text-slate-400 text-sm flex items-center gap-1"
-        >
+        <a href="/" className="text-slate-400 text-sm flex items-center gap-1">
           <span aria-hidden>←</span> トップへ
         </a>
       </div>
@@ -120,7 +120,10 @@ export default function Login() {
           <input type="hidden" name="intent" value={mode} />
 
           <div className="flex flex-col gap-1">
-            <label htmlFor="email" className="text-sm text-slate-600 font-medium">
+            <label
+              htmlFor="email"
+              className="text-sm text-slate-600 font-medium"
+            >
               メールアドレス
             </label>
             <input
@@ -170,8 +173,8 @@ export default function Login() {
             {isSubmitting
               ? "処理中..."
               : mode === "signup"
-              ? "アカウントを作成"
-              : "ログイン"}
+                ? "アカウントを作成"
+                : "ログイン"}
           </button>
         </Form>
 

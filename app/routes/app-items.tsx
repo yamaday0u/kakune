@@ -11,8 +11,21 @@ import type { Route } from "./+types/app-items";
 import { createSupabaseClient } from "~/lib/supabase.server";
 
 const PRESET_ICONS = [
-  "🔑", "🔒", "🚪", "🪟", "🔥", "💡", "⚡",
-  "🚿", "🚰", "🚗", "🎒", "💼", "🏠", "📱", "✔️",
+  "🔑",
+  "🔒",
+  "🚪",
+  "🪟",
+  "🔥",
+  "💡",
+  "⚡",
+  "🚿",
+  "🚰",
+  "🚗",
+  "🎒",
+  "💼",
+  "🏠",
+  "📱",
+  "✔️",
 ];
 
 type CheckItem = {
@@ -60,7 +73,7 @@ export async function action({ request }: Route.ActionArgs) {
     if (!name) {
       return data(
         { error: "項目名を入力してください", intent: "create" },
-        { headers: responseHeaders }
+        { headers: responseHeaders },
       );
     }
     const { data: maxItem } = await supabase
@@ -87,7 +100,7 @@ export async function action({ request }: Route.ActionArgs) {
     if (!name) {
       return data(
         { error: "項目名を入力してください", intent: "update", id },
-        { headers: responseHeaders }
+        { headers: responseHeaders },
       );
     }
     await supabase
@@ -108,7 +121,10 @@ export async function action({ request }: Route.ActionArgs) {
     return redirect("/app/items", { headers: responseHeaders });
   }
 
-  return data({ error: "不明な操作です", intent: "" }, { headers: responseHeaders });
+  return data(
+    { error: "不明な操作です", intent: "" },
+    { headers: responseHeaders },
+  );
 }
 
 // ─── 絵文字ピッカー ──────────────────────────────────────────
@@ -272,7 +288,9 @@ function ItemRow({
         <span className="text-2xl w-8 text-center shrink-0">
           {item.icon ?? "✔️"}
         </span>
-        <span className="text-base font-medium text-slate-700">{item.name}</span>
+        <span className="text-base font-medium text-slate-700">
+          {item.name}
+        </span>
       </div>
       <div className="flex shrink-0 border-l border-slate-100">
         <button
