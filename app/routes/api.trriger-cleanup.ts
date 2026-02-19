@@ -7,6 +7,9 @@ export async function loader({ request }: LoaderFunctionArgs) {
     return new Response("Unauthorized", { status: 401 });
   }
 
+  const cleanupSecret = process.env.CLEANUP_SECRET;
+  console.log("Received cleanup trigger. Cleanup secret: ", cleanupSecret);
+
   const res = await fetch(
     `${process.env.SUPABASE_URL}/functions/v1/cleanup-expired-photos`,
     {
