@@ -176,13 +176,12 @@ async function compressImage(file: File): Promise<Blob> {
       canvas.toBlob(
         (blob) => {
           if (blob) {
-            console.log(
-              `[compressImage] type=${blob.type} size=${(blob.size / 1024 / 1024).toFixed(2)}MB (${width}×${height}px)`,
-            );
-            resolve(blob);
-          } else {
-            reject(new Error("Image compression failed"));
-          }
+            if (blob.type === "image/png") {
+              reject(new Error(`webpではなく${blob.type}で出力されました`));
+            } else {
+              resolve(blob);
+            }
+          } else reject(new Error("Image compression failed"));
         },
         "image/webp",
         0.82,
@@ -332,7 +331,9 @@ function CheckItemCard({ item }: { item: CheckItem }) {
       </div>
 
       {uploadError && (
-        <p className="text-xs text-red-500 px-4 py-1 break-all">{uploadError}</p>
+        <p className="text-xs text-red-500 px-4 py-1 break-all">
+          {uploadError}
+        </p>
       )}
 
       {/* アクションシート */}
