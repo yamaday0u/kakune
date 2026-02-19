@@ -19,5 +19,6 @@ export async function loader({ request }: LoaderFunctionArgs) {
   );
 
   const data = await res.json();
+  console.log("Cleanup result:", data);
   return Response.json(data);
 }

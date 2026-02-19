@@ -119,12 +119,19 @@ export async function action({ request }: Route.ActionArgs) {
       );
     }
 
-    await supabase.from("check_logs").insert({
+    const { error: insertError } = await supabase.from("check_logs").insert({
       user_id: user.id,
       check_item_id: checkItemId,
       checked_at: new Date().toISOString(),
       photo_path: storagePath,
     });
+
+    if (insertError) {
+      return data(
+        { ok: false, error: `DB insert error: ${insertError.message}` },
+        { headers: responseHeaders },
+      );
+    }
 
     return data({ ok: true }, { headers: responseHeaders });
   }
@@ -186,6 +193,7 @@ function CheckItemCard({ item }: { item: CheckItem }) {
   const cameraInputRef = useRef<HTMLInputElement>(null);
   const albumInputRef = useRef<HTMLInputElement>(null);
   const [showSheet, setShowSheet] = useState(false);
+  const [uploadError, setUploadError] = useState<string | null>(null);
 
   const isCountSubmitting = countFetcher.state !== "idle";
   const isPhotoUploading = photoFetcher.state !== "idle";
@@ -196,10 +204,19 @@ function CheckItemCard({ item }: { item: CheckItem }) {
       : item.todayCount;
   const optimisticHasPhoto = isPhotoUploading || item.hasPhotoToday;
 
+  useEffect(() => {
+    if (photoFetcher.data && !photoFetcher.data.ok) {
+      setUploadError(
+        `サーバーエラー: ${(photoFetcher.data as { ok: false; error: string }).error}`,
+      );
+    }
+  }, [photoFetcher.data]);
+
   const handleFileChange = async (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
     if (!file) return;
     e.target.value = "";
+    setUploadError(null);
 
     try {
       const compressed = await compressImage(file);
@@ -211,7 +228,9 @@ function CheckItemCard({ item }: { item: CheckItem }) {
         method: "post",
         encType: "multipart/form-data",
       });
-    } catch {
+    } catch (err) {
+      const errMsg = err instanceof Error ? err.message : String(err);
+      setUploadError(`圧縮エラー: ${errMsg}`);
       const fd = new FormData();
       fd.append("intent", "upload_photo");
       fd.append("check_item_id", item.id);
@@ -305,6 +324,10 @@ function CheckItemCard({ item }: { item: CheckItem }) {
           onChange={handleFileChange}
         />
       </div>
+
+      {uploadError && (
+        <p className="text-xs text-red-500 px-4 py-1 break-all">{uploadError}</p>
+      )}
 
       {/* アクションシート */}
       {showSheet && (
