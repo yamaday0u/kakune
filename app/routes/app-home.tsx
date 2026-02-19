@@ -248,7 +248,7 @@ function CheckItemCard({ item }: { item: CheckItem }) {
         {/* アイテム名（詳細画面へのリンク） */}
         <Link
           to={`/app/items/${item.id}`}
-          className="flex items-center gap-3 pl-5 pr-3 py-4 min-h-[64px] flex-1 min-w-0 active:bg-slate-50 transition-colors"
+          className="flex items-center gap-3 pl-5 pr-3 py-4 min-h-16 flex-1 min-w-0 active:bg-slate-50 transition-colors"
           aria-label={`${item.name}の詳細を見る`}
         >
           <span className="text-2xl w-8 text-center shrink-0">
@@ -265,7 +265,7 @@ function CheckItemCard({ item }: { item: CheckItem }) {
           <input type="hidden" name="check_item_id" value={item.id} />
           <button
             type="submit"
-            className="flex items-center justify-center px-4 py-4 min-h-[64px] active:bg-slate-50 transition-colors"
+            className="flex items-center justify-center px-4 py-4 min-h-16 active:bg-slate-50 transition-colors"
             aria-label={`${item.name}を確認済みにする`}
           >
             <span
@@ -406,7 +406,7 @@ function WelcomeToast() {
           : "opacity-0 -translate-y-2 pointer-events-none"
       }`}
     >
-      <div className="flex items-center gap-3 bg-white rounded-2xl shadow-lg px-5 py-3.5 min-w-[240px]">
+      <div className="flex items-center gap-3 bg-white rounded-2xl shadow-lg px-5 py-3.5 min-w-60">
         <span className="text-2xl">🎉</span>
         <div>
           <p className="text-sm font-medium text-slate-700">
