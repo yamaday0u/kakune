@@ -284,7 +284,7 @@ function ItemRow({
 
   return (
     <li className="bg-white rounded-2xl shadow-sm flex items-center overflow-hidden">
-      <div className="flex-1 flex items-center gap-3 px-5 py-4 min-h-[64px]">
+      <div className="flex-1 flex items-center gap-3 px-5 py-4 min-h-16">
         <span className="text-2xl w-8 text-center shrink-0">
           {item.icon ?? "✔️"}
         </span>
@@ -296,7 +296,7 @@ function ItemRow({
         <button
           type="button"
           onClick={onEditStart}
-          className="px-4 py-4 text-sm text-slate-500 min-h-[64px] active:bg-slate-50 transition-colors"
+          className="px-4 py-4 text-sm text-slate-500 min-h-16 active:bg-slate-50 transition-colors"
         >
           編集
         </button>
@@ -305,7 +305,7 @@ function ItemRow({
           <input type="hidden" name="id" value={item.id} />
           <button
             type="submit"
-            className="px-4 py-4 text-sm text-red-400 min-h-[64px] border-l border-slate-100 active:bg-red-50 transition-colors"
+            className="px-4 py-4 text-sm text-red-400 min-h-16 border-l border-slate-100 active:bg-red-50 transition-colors"
             aria-label={`${item.name}を削除`}
           >
             削除
