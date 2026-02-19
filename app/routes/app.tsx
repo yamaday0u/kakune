@@ -27,7 +27,13 @@ function formatJapaneseDate(date: Date) {
 const navItems = [
   { to: "/app", label: "ホーム", icon: "🏠", end: true, disabled: false },
   { to: "/app/history", label: "履歴", icon: "📊", end: false, disabled: true },
-  { to: "/app/settings", label: "設定", icon: "⚙️", end: false, disabled: false },
+  {
+    to: "/app/settings",
+    label: "設定",
+    icon: "⚙️",
+    end: false,
+    disabled: false,
+  },
 ];
 
 export default function AppLayout() {
@@ -61,7 +67,9 @@ export default function AppLayout() {
                 <span className="flex flex-col items-center justify-center gap-0.5 py-3 min-h-[56px] text-slate-300 cursor-default select-none">
                   <span className="text-xl leading-none">{item.icon}</span>
                   <span className="text-xs font-medium">{item.label}</span>
-                  <span className="text-[9px] leading-none -mt-0.5">Coming soon</span>
+                  <span className="text-[9px] leading-none -mt-0.5">
+                    Coming soon
+                  </span>
                 </span>
               </li>
             ) : (
@@ -79,7 +87,7 @@ export default function AppLayout() {
                   <span>{item.label}</span>
                 </NavLink>
               </li>
-            )
+            ),
           )}
         </ul>
       </nav>

@@ -46,7 +46,7 @@ export async function loader({ request }: Route.LoaderArgs) {
       acc[log.check_item_id] = (acc[log.check_item_id] ?? 0) + 1;
       return acc;
     },
-    {}
+    {},
   );
 
   const photoMap = (todayLogs ?? []).reduce<Record<string, boolean>>(
@@ -54,7 +54,7 @@ export async function loader({ request }: Route.LoaderArgs) {
       if (log.photo_path) acc[log.check_item_id] = true;
       return acc;
     },
-    {}
+    {},
   );
 
   const checkItems: CheckItem[] = (items ?? []).map((item) => ({
@@ -69,7 +69,7 @@ export async function loader({ request }: Route.LoaderArgs) {
   if (showWelcome) {
     responseHeaders.append(
       "Set-Cookie",
-      "flash_welcome=; Path=/; Max-Age=0; SameSite=Lax"
+      "flash_welcome=; Path=/; Max-Age=0; SameSite=Lax",
     );
   }
 
@@ -97,7 +97,7 @@ export async function action({ request }: Route.ActionArgs) {
     if (!photoFile || photoFile.size === 0) {
       return data(
         { ok: false, error: "写真が選択されていません" },
-        { headers: responseHeaders }
+        { headers: responseHeaders },
       );
     }
 
@@ -115,7 +115,7 @@ export async function action({ request }: Route.ActionArgs) {
     if (uploadError) {
       return data(
         { ok: false, error: uploadError.message },
-        { headers: responseHeaders }
+        { headers: responseHeaders },
       );
     }
 
@@ -172,7 +172,7 @@ async function compressImage(file: File): Promise<Blob> {
           else reject(new Error("Image compression failed"));
         },
         "image/webp",
-        0.82
+        0.82,
       );
     };
     img.onerror = reject;
@@ -207,13 +207,19 @@ function CheckItemCard({ item }: { item: CheckItem }) {
       fd.append("intent", "upload_photo");
       fd.append("check_item_id", item.id);
       fd.append("photo", compressed, "photo.webp");
-      photoFetcher.submit(fd, { method: "post", encType: "multipart/form-data" });
+      photoFetcher.submit(fd, {
+        method: "post",
+        encType: "multipart/form-data",
+      });
     } catch {
       const fd = new FormData();
       fd.append("intent", "upload_photo");
       fd.append("check_item_id", item.id);
       fd.append("photo", file, "photo.webp");
-      photoFetcher.submit(fd, { method: "post", encType: "multipart/form-data" });
+      photoFetcher.submit(fd, {
+        method: "post",
+        encType: "multipart/form-data",
+      });
     }
   };
 
@@ -262,8 +268,8 @@ function CheckItemCard({ item }: { item: CheckItem }) {
             isPhotoUploading
               ? "bg-sky-50 text-sky-400"
               : optimisticHasPhoto
-              ? "text-sky-500 active:bg-sky-50"
-              : "text-slate-400 active:bg-slate-50"
+                ? "text-sky-500 active:bg-sky-50"
+                : "text-slate-400 active:bg-slate-50"
           }`}
           aria-label={isPhotoUploading ? "アップロード中..." : "写真を追加する"}
         >
@@ -273,7 +279,9 @@ function CheckItemCard({ item }: { item: CheckItem }) {
             <>
               <span className="text-xl leading-none">📷</span>
               {optimisticHasPhoto && (
-                <span className="text-[10px] font-medium mt-0.5 leading-none">済</span>
+                <span className="text-[10px] font-medium mt-0.5 leading-none">
+                  済
+                </span>
               )}
             </>
           )}
@@ -368,14 +376,20 @@ function WelcomeToast() {
   return (
     <div
       className={`fixed top-[max(5rem,calc(env(safe-area-inset-top)+3.5rem))] left-1/2 -translate-x-1/2 z-50 transition-all duration-500 ${
-        visible ? "opacity-100 translate-y-0" : "opacity-0 -translate-y-2 pointer-events-none"
+        visible
+          ? "opacity-100 translate-y-0"
+          : "opacity-0 -translate-y-2 pointer-events-none"
       }`}
     >
       <div className="flex items-center gap-3 bg-white rounded-2xl shadow-lg px-5 py-3.5 min-w-[240px]">
         <span className="text-2xl">🎉</span>
         <div>
-          <p className="text-sm font-medium text-slate-700">ようこそ、かくねへ！</p>
-          <p className="text-xs text-slate-400 mt-0.5">確認項目を追加して使い始めましょう</p>
+          <p className="text-sm font-medium text-slate-700">
+            ようこそ、かくねへ！
+          </p>
+          <p className="text-xs text-slate-400 mt-0.5">
+            確認項目を追加して使い始めましょう
+          </p>
         </div>
       </div>
     </div>

@@ -54,7 +54,7 @@ export async function loader({ request, params }: Route.LoaderArgs) {
         .from("photos")
         .createSignedUrl(log.photo_path, 3600);
       return { ...log, signedUrl: signed?.signedUrl ?? null };
-    })
+    }),
   );
 
   // 最新の写真URL（一番最近の写真付きログから取得）
@@ -62,7 +62,7 @@ export async function loader({ request, params }: Route.LoaderArgs) {
 
   return data(
     { item, logs, latestPhotoUrl: latestPhotoLog?.signedUrl ?? null },
-    { headers: responseHeaders }
+    { headers: responseHeaders },
   );
 }
 
@@ -124,7 +124,9 @@ export default function AppItemDetail() {
                 key={log.id}
                 className="flex items-center gap-1 bg-white rounded-xl px-3 py-2 text-sm text-slate-600 shadow-sm"
               >
-                <span className="tabular-nums">{formatTime(log.checked_at)}</span>
+                <span className="tabular-nums">
+                  {formatTime(log.checked_at)}
+                </span>
                 {log.photo_path && (
                   <span className="text-xs text-sky-400" aria-label="写真あり">
                     📷
