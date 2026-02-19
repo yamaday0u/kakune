@@ -230,15 +230,7 @@ function CheckItemCard({ item }: { item: CheckItem }) {
       });
     } catch (err) {
       const errMsg = err instanceof Error ? err.message : String(err);
-      setUploadError(`圧縮エラー: ${errMsg}`);
-      const fd = new FormData();
-      fd.append("intent", "upload_photo");
-      fd.append("check_item_id", item.id);
-      fd.append("photo", file, "photo.webp");
-      photoFetcher.submit(fd, {
-        method: "post",
-        encType: "multipart/form-data",
-      });
+      setUploadError(`写真の処理に失敗しました: ${errMsg}`);
     }
   };
 
