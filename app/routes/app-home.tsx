@@ -220,6 +220,14 @@ function CheckItemCard({ item }: { item: CheckItem }) {
 
     try {
       const compressed = await compressImage(file);
+
+      if (compressed.size > 4 * 1024 * 1024) {
+        setUploadError(
+          `写真のサイズが大きすぎます（圧縮後 ${(compressed.size / 1024 / 1024).toFixed(1)}MB）。別の写真を試してください。`,
+        );
+        return;
+      }
+
       const fd = new FormData();
       fd.append("intent", "upload_photo");
       fd.append("check_item_id", item.id);
