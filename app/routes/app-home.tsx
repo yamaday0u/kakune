@@ -175,8 +175,14 @@ async function compressImage(file: File): Promise<Blob> {
       ctx.drawImage(img, 0, 0, width, height);
       canvas.toBlob(
         (blob) => {
-          if (blob) resolve(blob);
-          else reject(new Error("Image compression failed"));
+          if (blob) {
+            console.log(
+              `[compressImage] type=${blob.type} size=${(blob.size / 1024 / 1024).toFixed(2)}MB (${width}×${height}px)`,
+            );
+            resolve(blob);
+          } else {
+            reject(new Error("Image compression failed"));
+          }
         },
         "image/webp",
         0.82,
