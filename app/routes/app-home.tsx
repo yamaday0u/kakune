@@ -146,14 +146,14 @@ export async function action({ request }: Route.ActionArgs) {
   return data({ ok: true }, { headers: responseHeaders });
 }
 
-/** Canvas API でクライアント側画像圧縮（最大 1920px / WebP） */
+/** Canvas API でクライアント側画像圧縮（最大 1280px / WebP） */
 async function compressImage(file: File): Promise<Blob> {
   return new Promise((resolve, reject) => {
     const img = new Image();
     const url = URL.createObjectURL(file);
     img.onload = () => {
       URL.revokeObjectURL(url);
-      const MAX = 1920;
+      const MAX = 1280;
       let { width, height } = img;
       if (width > MAX || height > MAX) {
         if (width >= height) {
@@ -175,16 +175,11 @@ async function compressImage(file: File): Promise<Blob> {
       ctx.drawImage(img, 0, 0, width, height);
       canvas.toBlob(
         (blob) => {
-          if (blob) {
-            if (blob.type === "image/png") {
-              reject(new Error(`webpではなく${blob.type}で出力されました`));
-            } else {
-              resolve(blob);
-            }
-          } else reject(new Error("Image compression failed"));
+          if (blob) resolve(blob);
+          else reject(new Error("Image compression failed"));
         },
         "image/webp",
-        0.82,
+        0.75,
       );
     };
     img.onerror = reject;
