@@ -26,7 +26,7 @@ function formatJapaneseDate(date: Date) {
 
 const navItems = [
   { to: "/app", label: "ホーム", icon: "🏠", end: true, disabled: false },
-  { to: "/app/history", label: "履歴", icon: "📊", end: false, disabled: true },
+  { to: "/app/history", label: "履歴", icon: "📊", end: false, disabled: false },
   {
     to: "/app/settings",
     label: "設定",
@@ -64,7 +64,7 @@ export default function AppLayout() {
           {navItems.map((item) =>
             item.disabled ? (
               <li key={item.to} className="flex-1">
-                <span className="flex flex-col items-center justify-center gap-0.5 py-3 min-h-[56px] text-slate-300 cursor-default select-none">
+                <span className="flex flex-col items-center justify-center gap-0.5 py-3 min-h-14 text-slate-300 cursor-default select-none">
                   <span className="text-xl leading-none">{item.icon}</span>
                   <span className="text-xs font-medium">{item.label}</span>
                   <span className="text-[9px] leading-none -mt-0.5">
@@ -78,7 +78,7 @@ export default function AppLayout() {
                   to={item.to}
                   end={item.end}
                   className={({ isActive }) =>
-                    `flex flex-col items-center justify-center gap-0.5 py-3 text-xs font-medium transition-colors min-h-[56px] ${
+                    `flex flex-col items-center justify-center gap-0.5 py-3 text-xs font-medium transition-colors min-h-14 ${
                       isActive ? "text-slate-700" : "text-slate-400"
                     }`
                   }
