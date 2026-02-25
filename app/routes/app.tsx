@@ -27,13 +27,6 @@ function formatJapaneseDate(date: Date) {
 const navItems = [
   { to: "/app", label: "ホーム", icon: "🏠", end: true, disabled: false },
   { to: "/app/history", label: "履歴", icon: "📊", end: false, disabled: false },
-  {
-    to: "/app/settings",
-    label: "設定",
-    icon: "⚙️",
-    end: false,
-    disabled: false,
-  },
 ];
 
 export default function AppLayout() {
