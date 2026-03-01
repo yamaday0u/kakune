@@ -9,3 +9,6 @@
 
 # Claude
 settings.local.json
+
+# Vercel
+.vercel/

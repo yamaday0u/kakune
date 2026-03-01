@@ -17,7 +17,13 @@ export async function loader({ request }: Route.LoaderArgs) {
     return redirect("/login", { headers: responseHeaders });
   }
 
-  return data({ email: user.email ?? "" }, { headers: responseHeaders });
+  return data(
+    {
+      email: user.email ?? "",
+      googleFormUrl: process.env.GOOGLE_FORM_URL ?? "",
+    },
+    { headers: responseHeaders }
+  );
 }
 
 export async function action({ request }: Route.ActionArgs) {
@@ -28,7 +34,7 @@ export async function action({ request }: Route.ActionArgs) {
 }
 
 export default function AppSettings() {
-  const { email } = useLoaderData<typeof loader>();
+  const { email, googleFormUrl } = useLoaderData<typeof loader>();
 
   return (
     <div className="flex flex-col gap-6 pt-2">
@@ -40,6 +46,22 @@ export default function AppSettings() {
         <p className="text-sm text-slate-500">メールアドレス</p>
         <p className="text-base text-slate-700 font-medium mt-0.5">{email}</p>
       </section>
+
+      {/* 感想・要望 */}
+      {googleFormUrl && (
+        <section className="bg-white rounded-2xl shadow-sm px-5 py-2">
+          <a
+            href={googleFormUrl}
+            target="_blank"
+            rel="noopener noreferrer"
+            className="w-full text-left py-3 text-base text-slate-700 font-medium flex items-center justify-between"
+          >
+            感想・要望を送る
+            <span className="text-xs text-slate-400 mr-1">Googleフォームが開きます</span>
+            <span className="text-slate-400">›</span>
+          </a>
+        </section>
+      )}
 
       {/* ログアウト */}
       <section className="bg-white rounded-2xl shadow-sm px-5 py-2">
