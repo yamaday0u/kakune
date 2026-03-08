@@ -66,6 +66,8 @@ kakune/
 npm run dev        # 開発サーバー起動
 npm run build      # プロダクションビルド
 npm run typecheck  # 型チェック（react-router typegen + tsc）
+npm run test       # テストを1回実行（CI向け）
+npm run test:watch # テストをウォッチモードで実行（開発中に継続監視）
 ```
 
 ## Cron ジョブ

@@ -32,6 +32,15 @@ Install the dependencies:
 npm ci
 ```
 
+### Running Tests
+
+```bash
+npm run test        # テストを1回実行（CI向け）
+npm run test:watch  # テストをウォッチモードで実行（開発中に継続監視）
+```
+
+テストには [Vitest](https://vitest.dev/) + [@testing-library/react](https://testing-library.com/docs/react-testing-library/intro/) を使用しています。
+
 ### Recommended Claude Setting
 
 `.claude/settings.local.json`を以下の内容で作成する。

@@ -7,14 +7,14 @@ export type CalendarDay = {
   byItem: { id: string; name: string; icon: string | null; count: number }[];
 };
 
-function heatmapClass(count: number): string {
+export function heatmapClass(count: number): string {
   if (count === 0) return "bg-slate-100 text-slate-300";
   if (count <= 2) return "bg-sky-100 text-sky-700";
   if (count <= 5) return "bg-sky-200 text-sky-800";
   return "bg-sky-300 text-sky-900";
 }
 
-function buildCalendarCells(year: number, month: number): (number | null)[] {
+export function buildCalendarCells(year: number, month: number): (number | null)[] {
   const dow = new Date(year, month - 1, 1).getDay(); // 0=日
   const firstDow = (dow + 6) % 7; // 月曜=0 に変換（日曜=6）
   const daysInMonth = new Date(year, month, 0).getDate();

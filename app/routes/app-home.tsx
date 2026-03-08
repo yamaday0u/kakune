@@ -390,7 +390,7 @@ function CheckItemCard({ item }: { item: CheckItem }) {
   );
 }
 
-function WelcomeToast() {
+export function WelcomeToast() {
   const [visible, setVisible] = useState(true);
 
   useEffect(() => {

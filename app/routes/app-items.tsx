@@ -128,7 +128,7 @@ export async function action({ request }: Route.ActionArgs) {
 }
 
 // ─── 絵文字ピッカー ──────────────────────────────────────────
-function IconPicker({
+export function IconPicker({
   name,
   value,
   onChange,
