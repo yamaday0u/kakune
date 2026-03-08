@@ -18,3 +18,31 @@
 ## git commit
 
 コミットメッセージは**日本語**で書く。
+
+## ブランチ運用
+
+コードを修正する際は**毎回必ず**以下の手順を守ること：
+
+1. `develop` ブランチの最新をプルする
+   ```bash
+   git checkout develop && git pull origin develop
+   ```
+2. `develop` から新しいブランチを切る
+   ```bash
+   git checkout -b <branch-name>
+   ```
+3. 変更を加えてコミット・プッシュする
+
+## プルリクエスト作成
+
+`gh pr create` のボディは**必ずHereDocumentを使う**こと：
+
+```bash
+gh pr create --title "タイトル" --body "$(cat <<'EOF'
+## Summary
+- 変更内容
+
+🤖 Generated with [Claude Code](https://claude.com/claude-code)
+EOF
+)"
+```
