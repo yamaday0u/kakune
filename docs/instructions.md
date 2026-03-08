@@ -32,3 +32,17 @@
    git checkout -b <branch-name>
    ```
 3. 変更を加えてコミット・プッシュする
+
+## プルリクエスト作成
+
+`gh pr create` のボディは**必ずHereDocumentを使う**こと：
+
+```bash
+gh pr create --title "タイトル" --body "$(cat <<'EOF'
+## Summary
+- 変更内容
+
+🤖 Generated with [Claude Code](https://claude.com/claude-code)
+EOF
+)"
+```
