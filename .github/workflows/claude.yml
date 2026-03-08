@@ -58,5 +58,5 @@ jobs:
           #     }
           #   }
           claude_args: |
-            --allowedTools "Bash(git add:*),Bash(git commit:*),Bash(git push:*)"
+            --allowedTools "Bash(git add:*),Bash(git commit:*),Bash(git push:*),Bash(gh pr create:*)"
             --disallowedTools "Bash(rm *),Bash(curl *)"
