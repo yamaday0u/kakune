@@ -35,7 +35,9 @@
 
 ## プルリクエスト作成
 
-`gh pr create` のボディは**必ずHereDocumentを使う**こと：
+- プルリクエストは常に `develop` ブランチへのマージを対象として作成すること（`main` ではなく）。
+
+- `gh pr create` のボディは**必ずHereDocumentを使う**こと：
 
 ```bash
 gh pr create --title "タイトル" --body "$(cat <<'EOF'
