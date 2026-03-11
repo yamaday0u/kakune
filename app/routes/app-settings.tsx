@@ -1,4 +1,11 @@
-import { data, redirect, Form, useLoaderData } from "react-router";
+import {
+  data,
+  redirect,
+  Form,
+  Link,
+  useLoaderData,
+  useSearchParams,
+} from "react-router";
 import type { Route } from "./+types/app-settings";
 import { createSupabaseClient } from "~/lib/supabase.server";
 
@@ -29,12 +36,16 @@ export async function loader({ request }: Route.LoaderArgs) {
 export async function action({ request }: Route.ActionArgs) {
   const responseHeaders = new Headers();
   const supabase = createSupabaseClient(request, responseHeaders);
+
+  // logout
   await supabase.auth.signOut();
   return redirect("/", { headers: responseHeaders });
 }
 
 export default function AppSettings() {
   const { email, googleFormUrl } = useLoaderData<typeof loader>();
+  const [searchParams] = useSearchParams();
+  const passwordChanged = searchParams.get("passwordChanged") === "1";
 
   return (
     <div className="flex flex-col gap-6 pt-2">
@@ -45,6 +56,22 @@ export default function AppSettings() {
         </p>
         <p className="text-sm text-slate-500">メールアドレス</p>
         <p className="text-base text-slate-700 font-medium mt-0.5">{email}</p>
+      </section>
+
+      {/* パスワード変更 */}
+      <section className="bg-white rounded-2xl shadow-sm px-5 py-2">
+        {passwordChanged && (
+          <p className="text-sm text-green-700 bg-green-50 rounded-xl px-4 py-3 mt-2 mb-1">
+            パスワードを変更しました
+          </p>
+        )}
+        <Link
+          to="/app/settings/change-password"
+          className="w-full text-left py-3 text-base text-slate-700 font-medium flex items-center justify-between"
+        >
+          パスワード変更
+          <span className="text-slate-400">›</span>
+        </Link>
       </section>
 
       {/* 感想・要望 */}
@@ -66,6 +93,7 @@ export default function AppSettings() {
       {/* ログアウト */}
       <section className="bg-white rounded-2xl shadow-sm px-5 py-2">
         <Form method="post">
+          <input type="hidden" name="intent" value="logout" />
           <button
             type="submit"
             className="w-full text-left py-3 text-base text-red-500 font-medium"
