@@ -20,12 +20,17 @@ export default function AuthResetPassword() {
   const [isRecovery, setIsRecovery] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [isSubmitting, setIsSubmitting] = useState(false);
+  const [debugEvents, setDebugEvents] = useState<string[]>([]);
 
   useEffect(() => {
     const supabase = createBrowserClient(supabaseUrl, supabaseKey);
     const {
       data: { subscription },
-    } = supabase.auth.onAuthStateChange((event) => {
+    } = supabase.auth.onAuthStateChange((event, session) => {
+      setDebugEvents((prev) => [
+        ...prev,
+        `event: ${event} / user: ${session?.user?.email ?? "none"} / amr: ${JSON.stringify((session?.user as unknown as { amr?: unknown })?.amr ?? null)}`,
+      ]);
       if (event === "PASSWORD_RECOVERY") {
         setIsRecovery(true);
       }
@@ -86,6 +91,16 @@ export default function AuthResetPassword() {
       </div>
 
       <div className="px-6 max-w-sm mx-auto w-full">
+        {/* デバッグパネル（確認後に削除） */}
+        <div className="mb-4 rounded-xl bg-slate-800 text-slate-200 text-xs font-mono p-3 flex flex-col gap-1">
+          <p className="text-slate-400">auth events:</p>
+          {debugEvents.length === 0 ? (
+            <p className="text-slate-500">（まだイベントなし）</p>
+          ) : (
+            debugEvents.map((e, i) => <p key={i}>{e}</p>)
+          )}
+        </div>
+
         {!isRecovery ? (
           <p className="text-sm text-slate-500 text-center">
             パスワードリセットメールのリンクからアクセスしてください。
