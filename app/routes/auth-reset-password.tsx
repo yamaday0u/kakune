@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { data, useLoaderData, useNavigate } from "react-router";
 import { createBrowserClient } from "@supabase/ssr";
 import type { Route } from "./+types/auth-reset-password";
@@ -20,22 +20,30 @@ export default function AuthResetPassword() {
   const [isRecovery, setIsRecovery] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [isSubmitting, setIsSubmitting] = useState(false);
-  const [debugEvents, setDebugEvents] = useState<string[]>([]);
+  // パスワード更新完了フラグ：クリーンアップ時の強制ログアウトを抑制するために使用
+  const passwordUpdated = useRef(false);
 
   useEffect(() => {
+    // PKCE フローでは PASSWORD_RECOVERY が発火しないため、
+    // URL に code パラメータがある場合（リセットメール由来）に
+    // SIGNED_IN を受け取ったときもフォームを表示する
+    const hasCode = new URLSearchParams(window.location.search).has("code");
     const supabase = createBrowserClient(supabaseUrl, supabaseKey);
     const {
       data: { subscription },
-    } = supabase.auth.onAuthStateChange((event, session) => {
-      setDebugEvents((prev) => [
-        ...prev,
-        `event: ${event} / user: ${session?.user?.email ?? "none"} / amr: ${JSON.stringify((session?.user as unknown as { amr?: unknown })?.amr ?? null)}`,
-      ]);
-      if (event === "PASSWORD_RECOVERY") {
+    } = supabase.auth.onAuthStateChange((event) => {
+      if (event === "PASSWORD_RECOVERY" || (event === "SIGNED_IN" && hasCode)) {
         setIsRecovery(true);
       }
     });
-    return () => subscription.unsubscribe();
+    return () => {
+      subscription.unsubscribe();
+      // パスワード変更が完了していない状態で画面を離れた場合、
+      // リセットリンク経由で作られたセッションを全て切断する
+      if (!passwordUpdated.current) {
+        supabase.auth.signOut();
+      }
+    };
   }, [supabaseUrl, supabaseKey]);
 
   async function handleSubmit(e: React.FormEvent<HTMLFormElement>) {
@@ -63,8 +71,10 @@ export default function AuthResetPassword() {
       setIsSubmitting(false);
       return;
     }
-    await supabase.auth.signOut({ scope: "others" });
-    navigate("/app");
+    // 全セッションを切断し、新しいパスワードで再ログインを促す
+    passwordUpdated.current = true;
+    await supabase.auth.signOut();
+    navigate("/login");
   }
 
   return (
@@ -91,16 +101,6 @@ export default function AuthResetPassword() {
       </div>
 
       <div className="px-6 max-w-sm mx-auto w-full">
-        {/* デバッグパネル（確認後に削除） */}
-        <div className="mb-4 rounded-xl bg-slate-800 text-slate-200 text-xs font-mono p-3 flex flex-col gap-1">
-          <p className="text-slate-400">auth events:</p>
-          {debugEvents.length === 0 ? (
-            <p className="text-slate-500">（まだイベントなし）</p>
-          ) : (
-            debugEvents.map((e, i) => <p key={i}>{e}</p>)
-          )}
-        </div>
-
         {!isRecovery ? (
           <p className="text-sm text-slate-500 text-center">
             パスワードリセットメールのリンクからアクセスしてください。
