@@ -93,12 +93,12 @@ export default function AppItemDetail() {
       </div>
 
       {/* 写真エリア */}
-      <div className="flex-1 flex items-center justify-center bg-slate-100 rounded-2xl overflow-hidden min-h-[240px] mx-0">
+      <div className="flex-1 flex items-center justify-center bg-slate-100 rounded-2xl overflow-hidden min-h-60 mx-0">
         {latestPhotoUrl ? (
           <img
             src={latestPhotoUrl}
             alt={`${item.name}の確認写真`}
-            className="w-full h-full object-contain max-h-[420px]"
+            className="w-full h-full object-contain max-h-105"
           />
         ) : (
           <div className="flex flex-col items-center gap-3 py-16 text-slate-400">

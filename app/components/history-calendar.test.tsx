@@ -1,4 +1,4 @@
-import { describe, test, expect, vi } from "vitest";
+import { describe, test, expect, vi, beforeEach } from "vitest";
 import { render, screen } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
 import {
@@ -10,7 +10,7 @@ import {
   type CalendarDay,
 } from "./history-calendar";
 
-// CalendarGrid は react-router のフックに依存するためモック
+// CalendarGrid / DayModal は react-router のフックに依存するためモック
 vi.mock("react-router", async () => {
   const actual = await vi.importActual<typeof import("react-router")>(
     "react-router",
@@ -19,7 +19,19 @@ vi.mock("react-router", async () => {
     ...actual,
     useNavigate: () => vi.fn(),
     useSearchParams: () => [new URLSearchParams(), vi.fn()],
+    useFetcher: vi.fn(),
   };
+});
+
+import { useFetcher } from "react-router";
+const mockUseFetcher = vi.mocked(useFetcher);
+
+beforeEach(() => {
+  mockUseFetcher.mockReturnValue({
+    state: "idle",
+    data: undefined,
+    load: vi.fn(),
+  } as never);
 });
 
 // ─── heatmapClass ──────────────────────────────────────────────────────────────
@@ -120,7 +132,7 @@ const sampleDay: CalendarDay = {
   ],
 };
 
-describe("DayModal", () => {
+describe("DayModal - アイテム一覧ビュー", () => {
   test("日付ラベルが正しく表示される", () => {
     render(<DayModal day={sampleDay} onClose={() => {}} />);
     expect(screen.getByText("1月15日（月）の記録")).toBeInTheDocument();
@@ -154,6 +166,196 @@ describe("DayModal", () => {
     const overlay = screen.getByText("1月15日（月）の記録").closest(".fixed");
     if (overlay) await userEvent.click(overlay);
     expect(onClose).toHaveBeenCalled();
+  });
+
+  test("各アイテムに › が表示される（タップ可能なことを示す）", () => {
+    render(<DayModal day={sampleDay} onClose={() => {}} />);
+    const chevrons = screen.getAllByText("›");
+    expect(chevrons).toHaveLength(sampleDay.byItem.length);
+  });
+});
+
+describe("DayModal - アイテム詳細ビューへの切り替え", () => {
+  test("アイテムをタップすると「戻る」ボタンが表示される", async () => {
+    render(<DayModal day={sampleDay} onClose={() => {}} />);
+    const keyButton = screen.getByText("鍵").closest("button");
+    if (keyButton) await userEvent.click(keyButton);
+    expect(screen.getByRole("button", { name: "戻る" })).toBeInTheDocument();
+  });
+
+  test("アイテムをタップすると日付ラベルが非表示になる", async () => {
+    render(<DayModal day={sampleDay} onClose={() => {}} />);
+    const keyButton = screen.getByText("鍵").closest("button");
+    if (keyButton) await userEvent.click(keyButton);
+    expect(
+      screen.queryByText("1月15日（月）の記録"),
+    ).not.toBeInTheDocument();
+  });
+
+  test("「戻る」ボタンをタップするとアイテム一覧に戻る", async () => {
+    render(<DayModal day={sampleDay} onClose={() => {}} />);
+    const keyButton = screen.getByText("鍵").closest("button");
+    if (keyButton) await userEvent.click(keyButton);
+    await userEvent.click(screen.getByRole("button", { name: "戻る" }));
+    expect(screen.getByText("1月15日（月）の記録")).toBeInTheDocument();
+  });
+
+  test("詳細ビューの × ボタンをタップすると onClose が呼ばれる", async () => {
+    const onClose = vi.fn();
+    render(<DayModal day={sampleDay} onClose={onClose} />);
+    const keyButton = screen.getByText("鍵").closest("button");
+    if (keyButton) await userEvent.click(keyButton);
+    await userEvent.click(screen.getByRole("button", { name: "閉じる" }));
+    expect(onClose).toHaveBeenCalledOnce();
+  });
+});
+
+// ─── ItemDayDetail（DayModal 経由）──────────────────────────────────────────────
+
+/** アイテムをタップして詳細ビューを表示するヘルパー */
+async function renderItemDetail(fetcherData: {
+  state: "idle" | "loading" | "submitting";
+  data?: unknown;
+}) {
+  mockUseFetcher.mockReturnValue({
+    ...fetcherData,
+    load: vi.fn(),
+  } as never);
+  render(<DayModal day={sampleDay} onClose={() => {}} />);
+  const keyButton = screen.getByText("鍵").closest("button");
+  if (keyButton) await userEvent.click(keyButton);
+}
+
+describe("ItemDayDetail", () => {
+  test("ローディング中はスピナーが表示される", async () => {
+    await renderItemDetail({ state: "loading" });
+    // アニメーションするスピナー要素が存在する
+    expect(document.querySelector(".animate-spin")).toBeInTheDocument();
+  });
+
+  test("ローディング中は写真エリアにログ一覧が表示されない", async () => {
+    await renderItemDetail({ state: "loading" });
+    expect(screen.queryByText(/回確認/)).not.toBeInTheDocument();
+  });
+
+  test("写真 URL がある場合 img が表示される", async () => {
+    await renderItemDetail({
+      state: "idle",
+      data: {
+        item: { id: "1", name: "鍵", icon: "🔑" },
+        logs: [
+          {
+            id: "log-1",
+            checked_at: "2024-01-15T10:30:00.000Z",
+            photo_path: "user-1/abc.webp",
+            photo_deleted_at: null,
+            signedUrl: "https://example.com/photo.webp",
+          },
+        ],
+      },
+    });
+    const img = screen.getByRole("img");
+    expect(img).toHaveAttribute("src", "https://example.com/photo.webp");
+  });
+
+  test("写真が削除された場合「アップロードされた写真は削除済みです」が表示される", async () => {
+    await renderItemDetail({
+      state: "idle",
+      data: {
+        item: { id: "1", name: "鍵", icon: "🔑" },
+        logs: [
+          {
+            id: "log-1",
+            checked_at: "2024-01-15T10:30:00.000Z",
+            photo_path: null,
+            photo_deleted_at: "2024-01-18T15:00:00.000Z",
+            signedUrl: null,
+          },
+        ],
+      },
+    });
+    expect(
+      screen.getByText("アップロードされた写真は削除済みです"),
+    ).toBeInTheDocument();
+  });
+
+  test("写真なし・削除なしの場合 📷 プレースホルダーが表示される", async () => {
+    await renderItemDetail({
+      state: "idle",
+      data: {
+        item: { id: "1", name: "鍵", icon: "🔑" },
+        logs: [
+          {
+            id: "log-1",
+            checked_at: "2024-01-15T10:30:00.000Z",
+            photo_path: null,
+            photo_deleted_at: null,
+            signedUrl: null,
+          },
+        ],
+      },
+    });
+    expect(screen.getByText("写真はありません")).toBeInTheDocument();
+    expect(screen.queryByRole("img")).not.toBeInTheDocument();
+  });
+
+  test("ログ回数が表示される", async () => {
+    await renderItemDetail({
+      state: "idle",
+      data: {
+        item: { id: "1", name: "鍵", icon: "🔑" },
+        logs: [
+          {
+            id: "log-1",
+            checked_at: "2024-01-15T10:30:00.000Z",
+            photo_path: null,
+            photo_deleted_at: null,
+            signedUrl: null,
+          },
+          {
+            id: "log-2",
+            checked_at: "2024-01-15T11:00:00.000Z",
+            photo_path: null,
+            photo_deleted_at: null,
+            signedUrl: null,
+          },
+        ],
+      },
+    });
+    // 2件のログ → "回確認" の隣に "2" が表示される
+    expect(screen.getByText("回確認").closest("div")).toHaveTextContent("2");
+  });
+
+  test("ログ時刻バッジが HH:MM 形式で表示される", async () => {
+    await renderItemDetail({
+      state: "idle",
+      data: {
+        item: { id: "1", name: "鍵", icon: "🔑" },
+        logs: [
+          {
+            id: "log-1",
+            checked_at: "2024-01-15T10:30:00.000Z",
+            photo_path: null,
+            photo_deleted_at: null,
+            signedUrl: null,
+          },
+        ],
+      },
+    });
+    // HH:MM 形式のバッジが存在すること
+    expect(screen.getByText(/^\d{2}:\d{2}$/)).toBeInTheDocument();
+  });
+
+  test("ログが空の場合は写真なし・0回確認が表示される", async () => {
+    await renderItemDetail({
+      state: "idle",
+      data: {
+        item: { id: "1", name: "鍵", icon: "🔑" },
+        logs: [],
+      },
+    });
+    expect(screen.getByText("写真はありません")).toBeInTheDocument();
+    expect(screen.getByText("0")).toBeInTheDocument();
   });
 });
 

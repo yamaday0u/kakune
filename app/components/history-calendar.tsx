@@ -1,4 +1,5 @@
-import { useNavigate, useSearchParams } from "react-router";
+import { useNavigate, useSearchParams, useFetcher } from "react-router";
+import { useEffect, useState } from "react";
 import { toJSTDateString } from "~/lib/date";
 
 export type CalendarDay = {
@@ -206,6 +207,12 @@ export function DayModal({
   const weekday = weekdays[new Date(year, month - 1, d).getDay()];
   const label = `${month}月${d}日（${weekday}）`;
 
+  const [selectedItem, setSelectedItem] = useState<{
+    id: string;
+    name: string;
+    icon: string | null;
+  } | null>(null);
+
   return (
     <div
       className="fixed inset-0 z-50 flex items-center justify-center px-4"
@@ -219,52 +226,205 @@ export function DayModal({
         className="relative w-full max-w-sm bg-white rounded-2xl shadow-xl overflow-hidden"
         onClick={(e) => e.stopPropagation()}
       >
-        {/* ヘッダー */}
-        <div className="flex items-center justify-between px-5 py-4 border-b border-slate-100">
-          <h3 className="text-base font-medium text-slate-700">
-            {label}の記録
-          </h3>
-          <button
-            type="button"
-            onClick={onClose}
-            className="flex items-center justify-center min-w-11 min-h-11 -mr-2 text-xl text-slate-400 active:text-slate-600 transition-colors"
-            aria-label="閉じる"
-          >
-            ×
-          </button>
-        </div>
+        {selectedItem ? (
+          <ItemDayDetail
+            itemId={selectedItem.id}
+            itemName={selectedItem.name}
+            itemIcon={selectedItem.icon}
+            date={day.date}
+            onBack={() => setSelectedItem(null)}
+            onClose={onClose}
+          />
+        ) : (
+          <>
+            {/* ヘッダー */}
+            <div className="flex items-center justify-between px-5 py-4 border-b border-slate-100">
+              <h3 className="text-base font-medium text-slate-700">
+                {label}の記録
+              </h3>
+              <button
+                type="button"
+                onClick={onClose}
+                className="flex items-center justify-center min-w-11 min-h-11 -mr-2 text-xl text-slate-400 active:text-slate-600 transition-colors"
+                aria-label="閉じる"
+              >
+                ×
+              </button>
+            </div>
 
-        {/* アイテム一覧 */}
-        <ul className="divide-y divide-slate-100">
-          {day.byItem.map((item) => (
-            <li key={item.id} className="flex items-center gap-3 px-5 py-3.5">
-              <span className="text-2xl w-8 text-center shrink-0">
-                {item.icon ?? "✔️"}
-              </span>
-              <span className="flex-1 text-base text-slate-700">
-                {item.name}
-              </span>
-              <span className="text-base font-bold tabular-nums text-slate-600">
-                {item.count}
-                <span className="text-sm font-normal text-slate-400 ml-0.5">
+            {/* アイテム一覧 */}
+            <ul className="divide-y divide-slate-100">
+              {day.byItem.map((item) => (
+                <li key={item.id}>
+                  <button
+                    type="button"
+                    onClick={() => setSelectedItem(item)}
+                    className="w-full flex items-center gap-3 px-5 py-3.5 active:bg-slate-50 transition-colors text-left"
+                  >
+                    <span className="text-2xl w-8 text-center shrink-0">
+                      {item.icon ?? "✔️"}
+                    </span>
+                    <span className="flex-1 text-base text-slate-700">
+                      {item.name}
+                    </span>
+                    <span className="text-base font-bold tabular-nums text-slate-600">
+                      {item.count}
+                      <span className="text-sm font-normal text-slate-400 ml-0.5">
+                        回
+                      </span>
+                    </span>
+                    <span className="text-slate-300 ml-1">›</span>
+                  </button>
+                </li>
+              ))}
+            </ul>
+
+            {/* フッター：合計 */}
+            <div className="flex items-center justify-between px-5 py-3 bg-slate-50 border-t border-slate-100">
+              <span className="text-sm text-slate-500">合計</span>
+              <span className="text-base font-bold tabular-nums text-slate-700">
+                {day.count}
+                <span className="text-sm font-normal text-slate-500 ml-0.5">
                   回
                 </span>
               </span>
-            </li>
-          ))}
-        </ul>
-
-        {/* フッター：合計 */}
-        <div className="flex items-center justify-between px-5 py-3 bg-slate-50 border-t border-slate-100">
-          <span className="text-sm text-slate-500">合計</span>
-          <span className="text-base font-bold tabular-nums text-slate-700">
-            {day.count}
-            <span className="text-sm font-normal text-slate-500 ml-0.5">
-              回
-            </span>
-          </span>
-        </div>
+            </div>
+          </>
+        )}
       </div>
     </div>
+  );
+}
+
+// ─── ItemDayDetail ─────────────────────────────────────────────────────────────
+
+type ItemDayLog = {
+  id: string;
+  checked_at: string;
+  photo_path: string | null;
+  photo_deleted_at: string | null;
+  signedUrl: string | null;
+};
+
+type ItemDayLogsData = {
+  item: { id: string; name: string; icon: string | null };
+  logs: ItemDayLog[];
+};
+
+function formatTime(isoString: string) {
+  const d = new Date(isoString);
+  return `${String(d.getHours()).padStart(2, "0")}:${String(d.getMinutes()).padStart(2, "0")}`;
+}
+
+function ItemDayDetail({
+  itemId,
+  itemName,
+  itemIcon,
+  date,
+  onBack,
+  onClose,
+}: {
+  itemId: string;
+  itemName: string;
+  itemIcon: string | null;
+  date: string;
+  onBack: () => void;
+  onClose: () => void;
+}) {
+  const fetcher = useFetcher<ItemDayLogsData>();
+
+  useEffect(() => {
+    fetcher.load(`/app/history/item-logs?itemId=${itemId}&date=${date}`);
+  }, [itemId, date]);
+
+  const logs = fetcher.data?.logs ?? [];
+  const latestSignedUrl = logs.find((l) => l.signedUrl !== null)?.signedUrl ?? null;
+  const hasDeletedPhoto = logs.some((l) => l.photo_deleted_at !== null);
+
+  return (
+    <>
+      {/* ヘッダー */}
+      <div className="flex items-center justify-between px-5 py-4 border-b border-slate-100">
+        <div className="flex items-center gap-2 min-w-0">
+          <button
+            type="button"
+            onClick={onBack}
+            className="flex items-center justify-center min-w-11 min-h-11 -ml-2 text-xl text-slate-400 active:text-slate-600 transition-colors shrink-0"
+            aria-label="戻る"
+          >
+            ‹
+          </button>
+          <h3 className="text-base font-medium text-slate-700 truncate">
+            {itemIcon ?? "✔️"} {itemName}
+          </h3>
+        </div>
+        <button
+          type="button"
+          onClick={onClose}
+          className="flex items-center justify-center min-w-11 min-h-11 -mr-2 text-xl text-slate-400 active:text-slate-600 transition-colors shrink-0"
+          aria-label="閉じる"
+        >
+          ×
+        </button>
+      </div>
+
+      {/* 写真エリア */}
+      <div className="flex items-center justify-center bg-slate-100 overflow-hidden min-h-50">
+        {fetcher.state === "loading" ? (
+          <div className="flex items-center justify-center py-12">
+            <div className="w-6 h-6 border-2 border-sky-400 border-t-transparent rounded-full animate-spin" />
+          </div>
+        ) : latestSignedUrl ? (
+          <img
+            src={latestSignedUrl}
+            alt={`${itemName}の確認写真`}
+            className="w-full object-contain max-h-70"
+          />
+        ) : hasDeletedPhoto ? (
+          <div className="flex flex-col items-center gap-2 py-10 text-slate-400">
+            <span className="text-4xl">🗑️</span>
+            <p className="text-sm">アップロードされた写真は削除済みです</p>
+          </div>
+        ) : (
+          <div className="flex flex-col items-center gap-2 py-10 text-slate-400">
+            <span className="text-4xl">📷</span>
+            <p className="text-sm">写真はありません</p>
+          </div>
+        )}
+      </div>
+
+      {/* カウント & ログ一覧 */}
+      <div className="px-5 py-4">
+        {fetcher.state !== "loading" && (
+          <>
+            <div className="flex items-baseline gap-2 mb-3">
+              <span className="text-3xl font-bold tabular-nums text-slate-700">
+                {logs.length}
+              </span>
+              <span className="text-sm text-slate-500">回確認</span>
+            </div>
+            {logs.length > 0 && (
+              <ul className="flex flex-wrap gap-2">
+                {logs.map((log) => (
+                  <li
+                    key={log.id}
+                    className="flex items-center gap-1 bg-slate-100 rounded-xl px-3 py-1.5 text-sm text-slate-600"
+                  >
+                    <span className="tabular-nums">
+                      {formatTime(log.checked_at)}
+                    </span>
+                    {(log.photo_path || log.photo_deleted_at) && (
+                      <span className="text-xs text-sky-400" aria-label="写真あり">
+                        📷
+                      </span>
+                    )}
+                  </li>
+                ))}
+              </ul>
+            )}
+          </>
+        )}
+      </div>
+    </>
   );
 }

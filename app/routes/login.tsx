@@ -274,6 +274,9 @@ export default function Login() {
           このアプリは強迫性障害（OCD）の治療の代替ではありません。
           専門家によるサポートと組み合わせてご利用ください。
         </p>
+        <p className="text-slate-400 text-xs mt-3">
+          © 2026 yamaday0u. All rights reserved.
+        </p>
       </footer>
     </div>
   );
