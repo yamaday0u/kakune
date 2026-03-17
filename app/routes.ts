@@ -7,6 +7,7 @@ export default [
   route("app", "routes/app.tsx", [
     index("routes/app-home.tsx"),
     route("history", "routes/app-history.tsx"),
+    route("history/item-logs", "routes/app-history-item-logs.ts"),
     route("items", "routes/app-items.tsx"),
     route("items/:id", "routes/app-item-detail.tsx"),
     route("settings", "routes/app-settings.tsx"),
