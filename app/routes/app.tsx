@@ -51,6 +51,13 @@ export default function AppLayout() {
         <Outlet />
       </main>
 
+      {/* コピーライト */}
+      <footer className="shrink-0 text-center py-1">
+        <p className="text-slate-400 text-[10px]">
+          © 2026 yamaday0u. All rights reserved.
+        </p>
+      </footer>
+
       {/* ボトムナビゲーション */}
       <nav className="shrink-0 bg-white border-t border-slate-100 pb-[env(safe-area-inset-bottom)]">
         <ul className="flex">
