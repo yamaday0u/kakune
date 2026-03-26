@@ -75,7 +75,7 @@ describe("loader - /app/history/item-logs", () => {
     const response = await loader({
       request: makeRequest({ itemId: "item-1", date: "2024-01-15" }),
     } as never);
-    expect(response.status).toBe(401);
+    expect((response as Response).status).toBe(401);
   });
 
   // --- バリデーション ---
@@ -84,21 +84,21 @@ describe("loader - /app/history/item-logs", () => {
     const response = await loader({
       request: makeRequest({ date: "2024-01-15" }),
     } as never);
-    expect(response.status).toBe(400);
+    expect((response as Response).status).toBe(400);
   });
 
   test("date が欠けている場合 400 を返す", async () => {
     const response = await loader({
       request: makeRequest({ itemId: "item-1" }),
     } as never);
-    expect(response.status).toBe(400);
+    expect((response as Response).status).toBe(400);
   });
 
   test("date のフォーマットが不正な場合 400 を返す", async () => {
     const response = await loader({
       request: makeRequest({ itemId: "item-1", date: "2024/01/15" }),
     } as never);
-    expect(response.status).toBe(400);
+    expect((response as Response).status).toBe(400);
   });
 
   // --- Not Found ---
@@ -110,7 +110,7 @@ describe("loader - /app/history/item-logs", () => {
     const response = await loader({
       request: makeRequest({ itemId: "item-1", date: "2024-01-15" }),
     } as never);
-    expect(response.status).toBe(404);
+    expect((response as Response).status).toBe(404);
   });
 
   // --- 正常系 ---
