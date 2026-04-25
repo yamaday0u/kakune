@@ -38,7 +38,7 @@ jobs:
           claude_code_oauth_token: ${{ secrets.CLAUDE_CODE_OAUTH_TOKEN }}
           plugin_marketplaces: "https://github.com/anthropics/claude-code.git"
           plugins: "code-review@claude-code-plugins"
-          allowed_bots: "dependabot[bot]"
+          allowed_bots: "dependabot[bot]" # DependabotのPRもレビュー対象にする場合はこの行を追加
           prompt: >
             /code-review:code-review ${{ github.repository }}/pull/${{ github.event.pull_request.number }}
             レビュー結果は問題がない場合も含め、必ずPRコメントとして投稿してください。問題ない場合は「問題ありませんでした」とコメントしてください。
