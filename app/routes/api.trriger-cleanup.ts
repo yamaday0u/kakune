@@ -1,4 +1,4 @@
-import type { LoaderFunctionArgs } from "@remix-run/node";
+import type { LoaderFunctionArgs } from "react-router";
 
 export async function loader({ request }: LoaderFunctionArgs) {
   // Vercel Cron からの呼び出しを認証 ※ブラウザからこのAPIにアクセスしても認証で失敗させる
