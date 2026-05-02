@@ -11,6 +11,12 @@ updates:
     open-pull-requests-limit: 3
     labels:
       - "dependencies"
+    groups:
+      # react-router関連のパッケージをまとめる
+      react-router:
+        patterns:
+          - "react-router"
+          - "@react-router/*"
 
   - package-ecosystem: "github-actions"
     directory: "/"
