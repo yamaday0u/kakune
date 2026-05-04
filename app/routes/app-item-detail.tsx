@@ -1,6 +1,7 @@
 import { data, redirect, useLoaderData } from "react-router";
 import type { Route } from "./+types/app-item-detail";
 import { createSupabaseClient } from "~/lib/supabase.server";
+import { jstTodayBounds } from "~/lib/date";
 
 type Log = {
   id: string;
@@ -22,10 +23,7 @@ export async function loader({ request, params }: Route.LoaderArgs) {
 
   const itemId = params.id as string;
 
-  const todayStart = new Date();
-  todayStart.setHours(0, 0, 0, 0);
-  const tomorrowStart = new Date(todayStart);
-  tomorrowStart.setDate(tomorrowStart.getDate() + 1);
+  const { start: todayStart, end: tomorrowStart } = jstTodayBounds();
 
   const [{ data: item }, { data: rawLogs }] = await Promise.all([
     supabase
