@@ -2,6 +2,7 @@ import { data, redirect, useFetcher, useLoaderData, Link } from "react-router";
 import { useRef, useState, useEffect } from "react";
 import type { Route } from "./+types/app-home";
 import { createSupabaseClient } from "~/lib/supabase.server";
+import { jstTodayBounds } from "~/lib/date";
 
 type CheckItem = {
   id: string;
@@ -23,10 +24,7 @@ export async function loader({ request }: Route.LoaderArgs) {
     return redirect("/login", { headers: responseHeaders });
   }
 
-  const todayStart = new Date();
-  todayStart.setHours(0, 0, 0, 0);
-  const tomorrowStart = new Date(todayStart);
-  tomorrowStart.setDate(tomorrowStart.getDate() + 1);
+  const { start: todayStart, end: tomorrowStart } = jstTodayBounds();
 
   const [{ data: items }, { data: todayLogs }] = await Promise.all([
     supabase
