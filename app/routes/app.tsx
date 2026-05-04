@@ -1,6 +1,7 @@
 import { data, redirect, Outlet, NavLink } from "react-router";
 import type { Route } from "./+types/app";
 import { createSupabaseClient } from "~/lib/supabase.server";
+import { JST_OFFSET_MS } from "~/lib/date";
 
 export async function loader({ request }: Route.LoaderArgs) {
   const responseHeaders = new Headers();
@@ -17,10 +18,11 @@ export async function loader({ request }: Route.LoaderArgs) {
 }
 
 function formatJapaneseDate(date: Date) {
-  const month = date.getMonth() + 1;
-  const day = date.getDate();
+  const jst = new Date(date.getTime() + JST_OFFSET_MS);
+  const month = jst.getUTCMonth() + 1;
+  const day = jst.getUTCDate();
   const weekdays = ["日", "月", "火", "水", "木", "金", "土"];
-  const weekday = weekdays[date.getDay()];
+  const weekday = weekdays[jst.getUTCDay()];
   return `${month}月${day}日（${weekday}）`;
 }
 

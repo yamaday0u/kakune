@@ -13,6 +13,15 @@ export function jstMonthBounds(year: number, month: number) {
   return { start, end };
 }
 
+/** JST の今日の境界（00:00〜翌00:00）を UTC の Date として返す */
+export function jstTodayBounds() {
+  const nowJSTMs = Date.now() + JST_OFFSET_MS;
+  const todayJSTMs = nowJSTMs - (nowJSTMs % (24 * 60 * 60 * 1000));
+  const start = new Date(todayJSTMs - JST_OFFSET_MS);
+  const end = new Date(start.getTime() + 24 * 60 * 60 * 1000);
+  return { start, end };
+}
+
 /** JST の週（月曜始まり）境界を UTC の Date として返す。
  *  weekOffset=0 → 今週, weekOffset=-1 → 先週 */
 export function jstWeekBounds(weekOffset = 0) {
