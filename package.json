@@ -12,19 +12,19 @@
     "test:watch": "vitest"
   },
   "dependencies": {
-    "@react-router/node": "7.14.2",
-    "@react-router/serve": "7.14.2",
+    "@react-router/node": "7.15.0",
+    "@react-router/serve": "7.15.0",
     "@supabase/ssr": "^0.10.2",
     "@supabase/supabase-js": "^2.100.1",
     "@vercel/react-router": "^1.2.6",
     "isbot": "^5.1.31",
     "react": "^19.2.5",
     "react-dom": "^19.2.4",
-    "react-router": "7.14.2",
+    "react-router": "7.15.0",
     "recharts": "^3.8.1"
   },
   "devDependencies": {
-    "@react-router/dev": "7.14.2",
+    "@react-router/dev": "7.15.0",
     "@tailwindcss/vite": "^4.1.13",
     "@testing-library/jest-dom": "^6.9.1",
     "@testing-library/react": "^16.3.2",
