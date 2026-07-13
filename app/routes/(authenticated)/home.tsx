@@ -1,6 +1,6 @@
 import { data, redirect, useFetcher, useLoaderData, Link } from "react-router";
 import { useRef, useState, useEffect } from "react";
-import type { Route } from "./+types/app-home";
+import type { Route } from "./+types/home";
 import { createSupabaseClient } from "~/lib/supabase.server";
 import { jstTodayBounds } from "~/lib/date";
 
@@ -245,7 +245,7 @@ function CheckItemCard({ item }: { item: CheckItem }) {
       <div className="flex items-center bg-white rounded-2xl shadow-sm overflow-hidden">
         {/* アイテム名（詳細画面へのリンク） */}
         <Link
-          to={`/app/items/${item.id}`}
+          to={`/items/${item.id}`}
           className="flex items-center gap-3 pl-5 pr-3 py-4 min-h-16 flex-1 min-w-0 active:bg-slate-50 transition-colors"
           aria-label={`${item.name}の詳細を見る`}
         >
@@ -437,7 +437,7 @@ export default function AppHome() {
             繰り返し確認したいものを追加しましょう。
           </p>
           <a
-            href="/app/items"
+            href="/items"
             className="mt-2 rounded-2xl bg-slate-700 text-white text-sm font-medium px-6 py-3"
           >
             項目を追加する
@@ -450,7 +450,7 @@ export default function AppHome() {
           ))}
 
           <a
-            href="/app/items"
+            href="/items"
             className="flex items-center justify-center gap-2 rounded-2xl border-2 border-dashed border-slate-200 text-slate-400 text-sm font-medium py-4 mt-1 active:border-slate-300 transition-colors"
           >
             <span className="text-lg">＋</span>

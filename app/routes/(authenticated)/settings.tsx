@@ -6,7 +6,7 @@ import {
   useLoaderData,
   useSearchParams,
 } from "react-router";
-import type { Route } from "./+types/app-settings";
+import type { Route } from "./+types/settings";
 import { createSupabaseClient } from "~/lib/supabase.server";
 
 export function meta({}: Route.MetaArgs) {
@@ -66,7 +66,7 @@ export default function AppSettings() {
           </p>
         )}
         <Link
-          to="/app/settings/change-password"
+          to="/settings/change-password"
           className="w-full text-left py-3 text-base text-slate-700 font-medium flex items-center justify-between"
         >
           パスワード変更

@@ -1,5 +1,5 @@
 import { data } from "react-router";
-import type { Route } from "./+types/app-history-item-logs";
+import type { Route } from "./+types/item-logs";
 import { createSupabaseClient } from "~/lib/supabase.server";
 import { JST_OFFSET_MS } from "~/lib/date";
 

@@ -21,13 +21,11 @@ kakune/
 │   ├── lib/
 │   │   └── supabase.server.ts  # Supabaseクライアント生成（SSR用）
 │   └── routes/
-│       ├── home.tsx            # / トップページ
-│       ├── login.tsx           # /login ログイン・新規登録
-│       ├── app.tsx             # /app レイアウト（ヘッダー・ボトムナビ）
-│       ├── app-home.tsx        # /app ホーム（確認項目一覧・カウント・写真）
-│       ├── app-item-detail.tsx # /app/items/:id アイテム詳細（写真・ログ一覧）
-│       ├── app-items.tsx       # /app/items 確認項目のCRUD管理
-│       └── app-settings.tsx    # /app/settings 設定
+│       ├── home.tsx                # /top ランディングページ
+│       ├── login.tsx               # /login ログイン・新規登録
+│       ├── auth-reset-password.tsx # /auth/reset-password パスワードリセット
+│       ├── api.trriger-cleanup.ts  # /api/trigger-cleanup Cronエンドポイント
+│       └── (authenticated)/        # ログイン後の画面（pathlessレイアウト）
 ├── supabase/
 │   └── migrations/
 │       ├── 20260214000000_init_schema.sql  # check_items / check_logs テーブル + RLS
@@ -44,13 +42,17 @@ kakune/
 ## ルーティング
 
 ```
-/                   → home.tsx        トップページ
-/login              → login.tsx       ログイン / 新規登録
-/app                → app.tsx（レイアウト）
-  /app              → app-home.tsx    ホーム（今日の確認ダッシュボード）
-  /app/items        → app-items.tsx   確認項目管理
-  /app/items/:id    → app-item-detail.tsx  アイテム詳細
-  /app/settings     → app-settings.tsx    設定
+/top                         → home.tsx              ランディングページ
+/login                       → login.tsx             ログイン / 新規登録
+/auth/reset-password         → auth-reset-password.tsx  パスワードリセット
+（pathlessレイアウト: (authenticated)/layout.tsx）
+  /                          → (authenticated)/home.tsx          ホーム（今日の確認ダッシュボード）
+  /history                   → (authenticated)/history.tsx       確認履歴
+  /history/item-logs         → (authenticated)/history/item-logs.ts  アイテム別ログ（API）
+  /items                     → (authenticated)/items.tsx         確認項目管理
+  /items/:id                 → (authenticated)/items/detail.tsx  アイテム詳細
+  /settings                  → (authenticated)/settings.tsx      設定
+  /settings/change-password  → (authenticated)/settings/change-password.tsx  パスワード変更
 ```
 
 ## DBスキーマ（Supabase）

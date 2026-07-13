@@ -1,5 +1,5 @@
 import { describe, test, expect, vi, beforeEach } from "vitest";
-import { loader } from "./app-history-item-logs";
+import { loader } from "./item-logs";
 import { createSupabaseClient } from "~/lib/supabase.server";
 
 vi.mock("~/lib/supabase.server", () => ({
@@ -52,7 +52,7 @@ function makeMockSupabase({
 }
 
 function makeRequest(params: Record<string, string> = {}) {
-  const url = new URL("http://localhost/app/history/item-logs");
+  const url = new URL("http://localhost/history/item-logs");
   for (const [k, v] of Object.entries(params)) {
     url.searchParams.set(k, v);
   }
@@ -61,7 +61,7 @@ function makeRequest(params: Record<string, string> = {}) {
 
 // ─── テスト ────────────────────────────────────────────────────────────────────
 
-describe("loader - /app/history/item-logs", () => {
+describe("loader - /history/item-logs", () => {
   beforeEach(() => {
     mockCreateSupabaseClient.mockReturnValue(makeMockSupabase() as never);
   });

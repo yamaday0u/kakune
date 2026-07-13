@@ -20,7 +20,7 @@ export async function loader({ request }: Route.LoaderArgs) {
     data: { user },
   } = await supabase.auth.getUser();
   if (user) {
-    return redirect("/app", { headers: responseHeaders });
+    return redirect("/", { headers: responseHeaders });
   }
   return data({}, { headers: responseHeaders });
 }
@@ -57,14 +57,14 @@ export async function action({ request }: Route.ActionArgs) {
       "Set-Cookie",
       "flash_welcome=1; Path=/; Max-Age=60; SameSite=Lax",
     );
-    return redirect("/app", { headers: responseHeaders });
+    return redirect("/", { headers: responseHeaders });
   }
 
   const { error } = await supabase.auth.signInWithPassword({ email, password });
   if (error) {
     return data({ error: error.message, intent }, { headers: responseHeaders });
   }
-  return redirect("/app", { headers: responseHeaders });
+  return redirect("/", { headers: responseHeaders });
 }
 
 export default function Login() {

@@ -7,7 +7,7 @@ import {
   useActionData,
   useNavigation,
 } from "react-router";
-import type { Route } from "./+types/app-items";
+import type { Route } from "./+types/items";
 import { createSupabaseClient } from "~/lib/supabase.server";
 
 const PRESET_ICONS = [
@@ -90,7 +90,7 @@ export async function action({ request }: Route.ActionArgs) {
       icon,
       sort_order: (maxItem?.sort_order ?? -1) + 1,
     });
-    return redirect("/app/items", { headers: responseHeaders });
+    return redirect("/items", { headers: responseHeaders });
   }
 
   if (intent === "update") {
@@ -108,7 +108,7 @@ export async function action({ request }: Route.ActionArgs) {
       .update({ name, icon, updated_at: new Date().toISOString() })
       .eq("id", id)
       .eq("user_id", user.id);
-    return redirect("/app/items", { headers: responseHeaders });
+    return redirect("/items", { headers: responseHeaders });
   }
 
   if (intent === "delete") {
@@ -118,7 +118,7 @@ export async function action({ request }: Route.ActionArgs) {
       .delete()
       .eq("id", id)
       .eq("user_id", user.id);
-    return redirect("/app/items", { headers: responseHeaders });
+    return redirect("/items", { headers: responseHeaders });
   }
 
   return data(

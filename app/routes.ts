@@ -1,17 +1,10 @@
-import { type RouteConfig, index, route } from "@react-router/dev/routes";
+import { type RouteConfig, route, layout } from "@react-router/dev/routes";
+import authenticatedRoutes from "./routes/(authenticated)/routes";
 
 export default [
-  index("routes/home.tsx"),
+  route("top", "routes/home.tsx"),
   route("login", "routes/login.tsx"),
   route("auth/reset-password", "routes/auth-reset-password.tsx"),
-  route("app", "routes/app.tsx", [
-    index("routes/app-home.tsx"),
-    route("history", "routes/app-history.tsx"),
-    route("history/item-logs", "routes/app-history-item-logs.ts"),
-    route("items", "routes/app-items.tsx"),
-    route("items/:id", "routes/app-item-detail.tsx"),
-    route("settings", "routes/app-settings.tsx"),
-    route("settings/change-password", "routes/app-settings-change-password.tsx"),
-  ]),
+  layout("routes/(authenticated)/layout.tsx", authenticatedRoutes),
   route("api/trigger-cleanup", "routes/api.trriger-cleanup.ts"),
 ] satisfies RouteConfig;

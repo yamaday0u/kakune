@@ -1,7 +1,7 @@
 import { describe, test, expect, vi } from "vitest";
 import { render, screen } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
-import { IconPicker } from "./app-items";
+import { IconPicker } from "./items";
 
 const PRESET_ICONS = [
   "🔑", "🔒", "🚪", "🪟", "🔥", "💡", "⚡", "🚿",
