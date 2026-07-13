@@ -6,7 +6,7 @@ import {
   useNavigation,
   Link,
 } from "react-router";
-import type { Route } from "./+types/app-settings-change-password";
+import type { Route } from "./+types/change-password";
 import { createSupabaseClient } from "~/lib/supabase.server";
 
 export function meta({}: Route.MetaArgs) {
@@ -69,7 +69,7 @@ export async function action({ request }: Route.ActionArgs) {
   if (error) return data({ error: error.message }, { headers: responseHeaders });
 
   await supabase.auth.signOut({ scope: "others" });
-  return redirect("/app/settings?passwordChanged=1", {
+  return redirect("/settings?passwordChanged=1", {
     headers: responseHeaders,
   });
 }
@@ -84,7 +84,7 @@ export default function AppSettingsChangePassword() {
       {/* ヘッダー */}
       <div className="flex items-center gap-3">
         <Link
-          to="/app/settings"
+          to="/settings"
           className="text-slate-400 text-xl leading-none p-1 -ml-1"
           aria-label="戻る"
         >

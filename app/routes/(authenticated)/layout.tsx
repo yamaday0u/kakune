@@ -1,5 +1,5 @@
 import { data, redirect, Outlet } from "react-router";
-import type { Route } from "./+types/app";
+import type { Route } from "./+types/layout";
 import { createSupabaseClient } from "~/lib/supabase.server";
 import Header from "~/components/Header";
 import BottomNav from "~/components/BottomNav";

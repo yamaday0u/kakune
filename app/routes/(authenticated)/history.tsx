@@ -6,7 +6,7 @@ import {
   type ShouldRevalidateFunctionArgs,
 } from "react-router";
 import { useState } from "react";
-import type { Route } from "./+types/app-history";
+import type { Route } from "./+types/history";
 import { createSupabaseClient } from "~/lib/supabase.server";
 import {
   JST_OFFSET_MS,

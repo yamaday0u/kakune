@@ -1,6 +1,6 @@
 import { describe, test, expect, vi, beforeEach, afterEach } from "vitest";
 import { render, screen, act } from "@testing-library/react";
-import { WelcomeToast } from "./app-home";
+import { WelcomeToast } from "./home";
 
 describe("WelcomeToast", () => {
   beforeEach(() => {

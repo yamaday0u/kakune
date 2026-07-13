@@ -9,8 +9,8 @@ const navItems: {
   end: boolean;
   disabled: boolean;
 }[] = [
-  { to: "/app", label: "ホーム", icon: House, end: true, disabled: false },
-  { to: "/app/history", label: "履歴", icon: History, end: false, disabled: false },
+  { to: "/", label: "ホーム", icon: House, end: true, disabled: false },
+  { to: "/history", label: "履歴", icon: History, end: false, disabled: false },
 ];
 
 export default function BottomNav() {

@@ -1,5 +1,5 @@
 import { data, redirect, useLoaderData } from "react-router";
-import type { Route } from "./+types/app-item-detail";
+import type { Route } from "./+types/detail";
 import { createSupabaseClient } from "~/lib/supabase.server";
 import { jstTodayBounds } from "~/lib/date";
 
@@ -41,7 +41,7 @@ export async function loader({ request, params }: Route.LoaderArgs) {
   ]);
 
   if (!item) {
-    return redirect("/app", { headers: responseHeaders });
+    return redirect("/", { headers: responseHeaders });
   }
 
   // 写真のある記録に署名付きURLを生成
@@ -77,7 +77,7 @@ export default function AppItemDetail() {
       {/* 戻るリンク */}
       <div className="px-1 pt-2 pb-4">
         <a
-          href="/app"
+          href="/"
           className="text-slate-400 text-sm flex items-center gap-1"
         >
           <span aria-hidden>←</span> ホームへ

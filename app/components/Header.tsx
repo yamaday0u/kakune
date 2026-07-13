@@ -17,7 +17,7 @@ export default function Header() {
     <header className="shrink-0 flex items-center justify-between px-5 pt-[max(1rem,env(safe-area-inset-top))] pb-4 bg-slate-200 border-2 border-slate-200 ">
       <h1 className="text-base font-medium text-slate-600">{dateLabel}</h1>
       <NavLink
-        to="/app/settings"
+        to="/settings"
         aria-label="設定"
         className="text-slate-400 text-2xl leading-none p-1 -mr-1"
       >

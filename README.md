@@ -12,16 +12,6 @@
 
 強迫性障害（OCD）の確認行為に悩む人が、「確認した事実」を外部に記録することで、繰り返し確認する衝動を和らげるためのWebアプリ。
 
-## Features
-
-- 🚀 Server-side rendering
-- ⚡️ Hot Module Replacement (HMR)
-- 📦 Asset bundling and optimization
-- 🔄 Data loading and mutations
-- 🔒 TypeScript by default
-- 🎉 TailwindCSS for styling
-- 📖 [React Router docs](https://reactrouter.com/)
-
 ## Getting Started
 
 ### Installation

@@ -1,6 +1,6 @@
 import { describe, test, expect, vi } from "vitest";
 import { render, screen } from "@testing-library/react";
-import AppSettingsChangePassword from "./app-settings-change-password";
+import AppSettingsChangePassword from "./change-password";
 
 vi.mock("react-router", () => ({
   useActionData: vi.fn(),
@@ -43,7 +43,7 @@ describe("AppSettingsChangePassword", () => {
   test("設定画面に戻るリンクが表示される", () => {
     renderPage();
     const link = screen.getByRole("link", { name: "戻る" });
-    expect(link).toHaveAttribute("href", "/app/settings");
+    expect(link).toHaveAttribute("href", "/settings");
   });
 
   test("現在のパスワード入力フィールドがある", () => {
