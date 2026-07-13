@@ -1,6 +1,6 @@
 import { describe, test, expect, vi } from "vitest";
 import { render, screen } from "@testing-library/react";
-import AppSettings from "./app-settings";
+import AppSettings from "./settings";
 
 vi.mock("react-router", () => ({
   useLoaderData: vi.fn(),
@@ -44,10 +44,10 @@ describe("AppSettings", () => {
     expect(screen.getByText("user@example.com")).toBeInTheDocument();
   });
 
-  test("「パスワード変更」リンクが /app/settings/change-password を指している", () => {
+  test("「パスワード変更」リンクが /settings/change-password を指している", () => {
     renderSettings();
     const link = screen.getByRole("link", { name: /パスワード変更/ });
-    expect(link).toHaveAttribute("href", "/app/settings/change-password");
+    expect(link).toHaveAttribute("href", "/settings/change-password");
   });
 
   test("passwordChanged=1 のとき成功メッセージが表示される", () => {

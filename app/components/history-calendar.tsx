@@ -15,7 +15,10 @@ export function heatmapClass(count: number): string {
   return "bg-sky-300 text-sky-900";
 }
 
-export function buildCalendarCells(year: number, month: number): (number | null)[] {
+export function buildCalendarCells(
+  year: number,
+  month: number,
+): (number | null)[] {
   const dow = new Date(year, month - 1, 1).getDay(); // 0=日
   const firstDow = (dow + 6) % 7; // 月曜=0 に変換（日曜=6）
   const daysInMonth = new Date(year, month, 0).getDate();
@@ -93,7 +96,7 @@ export function CalendarGrid({
   function buildMonthUrl(monthStr: string) {
     const params = new URLSearchParams(searchParams);
     params.set("month", monthStr);
-    return `/app/history?${params.toString()}`;
+    return `/history?${params.toString()}`;
   }
 
   function goToPrevMonth() {
@@ -334,11 +337,12 @@ function ItemDayDetail({
   const fetcher = useFetcher<ItemDayLogsData>();
 
   useEffect(() => {
-    fetcher.load(`/app/history/item-logs?itemId=${itemId}&date=${date}`);
+    fetcher.load(`/history/item-logs?itemId=${itemId}&date=${date}`);
   }, [itemId, date]);
 
   const logs = fetcher.data?.logs ?? [];
-  const latestSignedUrl = logs.find((l) => l.signedUrl !== null)?.signedUrl ?? null;
+  const latestSignedUrl =
+    logs.find((l) => l.signedUrl !== null)?.signedUrl ?? null;
   const hasDeletedPhoto = logs.some((l) => l.photo_deleted_at !== null);
 
   return (
@@ -414,7 +418,10 @@ function ItemDayDetail({
                       {formatTime(log.checked_at)}
                     </span>
                     {(log.photo_path || log.photo_deleted_at) && (
-                      <span className="text-xs text-sky-400" aria-label="写真あり">
+                      <span
+                        className="text-xs text-sky-400"
+                        aria-label="写真あり"
+                      >
                         📷
                       </span>
                     )}

@@ -6,7 +6,7 @@ import {
   type ShouldRevalidateFunctionArgs,
 } from "react-router";
 import { useState } from "react";
-import type { Route } from "./+types/app-history";
+import type { Route } from "./+types/history";
 import { createSupabaseClient } from "~/lib/supabase.server";
 import {
   JST_OFFSET_MS,
@@ -21,6 +21,7 @@ import {
   DayModal,
 } from "~/components/history-calendar";
 import { GraphView } from "~/components/history-graph";
+import { Calendar1, ChartSpline } from "lucide-react";
 
 // ─── shouldRevalidate ─────────────────────────────────────────────────────────
 
@@ -151,10 +152,8 @@ export default function AppHistory() {
   const [selectedDay, setSelectedDay] = useState<CalendarDay | null>(null);
   const [year, month] = currentMonth.split("-").map(Number);
 
-  const view =
-    searchParams.get("view") === "graph" ? "graph" : "calendar";
-  const period =
-    searchParams.get("period") === "weekly" ? "weekly" : "daily";
+  const view = searchParams.get("view") === "graph" ? "graph" : "calendar";
+  const period = searchParams.get("period") === "weekly" ? "weekly" : "daily";
 
   const calendarMap = Object.fromEntries(calendarData.map((d) => [d.date, d]));
 
@@ -199,23 +198,19 @@ export default function AppHistory() {
           type="button"
           onClick={() => setView("calendar")}
           className={`flex-1 flex items-center justify-center gap-1.5 py-2.5 rounded-xl text-sm font-medium transition-colors ${
-            view === "calendar"
-              ? "bg-sky-50 text-sky-600"
-              : "text-slate-500"
+            view === "calendar" ? "bg-sky-50 text-sky-600" : "text-slate-500"
           }`}
         >
-          📅 カレンダー
+          <Calendar1 size={16} /> カレンダー
         </button>
         <button
           type="button"
           onClick={() => setView("graph")}
           className={`flex-1 flex items-center justify-center gap-1.5 py-2.5 rounded-xl text-sm font-medium transition-colors ${
-            view === "graph"
-              ? "bg-sky-50 text-sky-600"
-              : "text-slate-500"
+            view === "graph" ? "bg-sky-50 text-sky-600" : "text-slate-500"
           }`}
         >
-          📈 グラフ
+          <ChartSpline size={16} /> グラフ
         </button>
       </div>
 
