@@ -23,6 +23,22 @@ export const TEXT = {
 } as const;
 
 /** 曜日ラベル（日曜始まり。Date#getDay() のインデックスに対応） */
-export const WEEKDAYS_SUN_START = ["日", "月", "火", "水", "木", "金", "土"] as const;
+export const WEEKDAYS_SUN_START = [
+  "日",
+  "月",
+  "火",
+  "水",
+  "木",
+  "金",
+  "土",
+] as const;
 /** 曜日ラベル（月曜始まり） */
-export const WEEKDAYS_MON_START = ["月", "火", "水", "木", "金", "土", "日"] as const;
+export const WEEKDAYS_MON_START = [
+  "月",
+  "火",
+  "水",
+  "木",
+  "金",
+  "土",
+  "日",
+] as const;
