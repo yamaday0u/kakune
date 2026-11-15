@@ -1,8 +1,9 @@
 import type { Route } from "./+types/home";
+import { APP_ICON_ALT, pageTitle } from "~/lib/text";
 
 export function meta({}: Route.MetaArgs) {
   return [
-    { title: "かくね — 確認した、を記録しよう" },
+    { title: pageTitle("確認した、を記録しよう") },
     {
       name: "description",
       content:
@@ -53,7 +54,7 @@ export default function Home() {
           <div className="absolute inset-0 rounded-full bg-sky-100 opacity-60" />
           <img
             src="/app-icon-base.png"
-            alt="かくねアイコン"
+            alt={APP_ICON_ALT}
             className="relative w-16 h-16 object-contain"
           />
         </div>

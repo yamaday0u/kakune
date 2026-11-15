@@ -2,9 +2,17 @@ import { useEffect, useRef, useState } from "react";
 import { data, useLoaderData, useNavigate } from "react-router";
 import { createBrowserClient } from "@supabase/ssr";
 import type { Route } from "./+types/auth-reset-password";
+import {
+  APP_ICON_ALT,
+  APP_NAME,
+  PASSWORD_MIN_LENGTH,
+  PASSWORD_PLACEHOLDER,
+  TEXT,
+  pageTitle,
+} from "~/lib/text";
 
 export function meta({}: Route.MetaArgs) {
-  return [{ title: "パスワードをリセット — かくね" }];
+  return [{ title: pageTitle("パスワードをリセット") }];
 }
 
 export function loader() {
@@ -52,12 +60,12 @@ export default function AuthResetPassword() {
     const newPassword = formData.get("newPassword") as string;
     const confirmPassword = formData.get("confirmPassword") as string;
 
-    if (newPassword.length < 8) {
-      setError("パスワードは8文字以上で入力してください");
+    if (newPassword.length < PASSWORD_MIN_LENGTH) {
+      setError(TEXT.passwordTooShort);
       return;
     }
     if (newPassword !== confirmPassword) {
-      setError("パスワードが一致しません");
+      setError(TEXT.passwordMismatch);
       return;
     }
 
@@ -93,11 +101,11 @@ export default function AuthResetPassword() {
           <div className="absolute inset-0 rounded-full bg-sky-100 opacity-60" />
           <img
             src="/app-icon-base.png"
-            alt="かくねアイコン"
+            alt={APP_ICON_ALT}
             className="relative w-10 h-10 object-contain"
           />
         </div>
-        <h1 className="text-3xl font-bold text-slate-700">かくね</h1>
+        <h1 className="text-3xl font-bold text-slate-700">{APP_NAME}</h1>
       </div>
 
       <div className="px-6 max-w-sm mx-auto w-full">
@@ -124,8 +132,8 @@ export default function AuthResetPassword() {
                 type="password"
                 autoComplete="new-password"
                 required
-                minLength={8}
-                placeholder="8文字以上"
+                minLength={PASSWORD_MIN_LENGTH}
+                placeholder={PASSWORD_PLACEHOLDER}
                 className="rounded-xl border border-slate-200 bg-white px-4 py-3 text-base text-slate-700 outline-none focus:border-slate-400 focus:ring-2 focus:ring-slate-200 transition"
               />
             </div>
@@ -143,8 +151,8 @@ export default function AuthResetPassword() {
                 type="password"
                 autoComplete="new-password"
                 required
-                minLength={8}
-                placeholder="8文字以上"
+                minLength={PASSWORD_MIN_LENGTH}
+                placeholder={PASSWORD_PLACEHOLDER}
                 className="rounded-xl border border-slate-200 bg-white px-4 py-3 text-base text-slate-700 outline-none focus:border-slate-400 focus:ring-2 focus:ring-slate-200 transition"
               />
             </div>
@@ -160,7 +168,7 @@ export default function AuthResetPassword() {
               disabled={isSubmitting}
               className="mt-2 rounded-2xl bg-slate-700 text-white text-base font-medium py-4 active:scale-95 transition-transform disabled:opacity-60"
             >
-              {isSubmitting ? "処理中..." : "パスワードを変更"}
+              {isSubmitting ? TEXT.processing : TEXT.changePassword}
             </button>
           </form>
         )}

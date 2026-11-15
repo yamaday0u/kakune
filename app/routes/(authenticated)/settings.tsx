@@ -8,9 +8,10 @@ import {
 } from "react-router";
 import type { Route } from "./+types/settings";
 import { createSupabaseClient } from "~/lib/supabase.server";
+import { pageTitle } from "~/lib/text";
 
 export function meta({}: Route.MetaArgs) {
-  return [{ title: "設定 — かくね" }];
+  return [{ title: pageTitle("設定") }];
 }
 
 export async function loader({ request }: Route.LoaderArgs) {

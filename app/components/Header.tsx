@@ -1,13 +1,13 @@
 import { NavLink } from "react-router";
 import { Settings } from "lucide-react";
 import { JST_OFFSET_MS } from "~/lib/date";
+import { WEEKDAYS_SUN_START } from "~/lib/text";
 
 function formatJapaneseDate() {
   const nowJST = new Date(Date.now() + JST_OFFSET_MS);
   const month = nowJST.getUTCMonth() + 1;
   const day = nowJST.getUTCDate();
-  const weekdays = ["日", "月", "火", "水", "木", "金", "土"];
-  const weekday = weekdays[nowJST.getUTCDay()];
+  const weekday = WEEKDAYS_SUN_START[nowJST.getUTCDay()];
   return `${month}月${day}日（${weekday}）`;
 }
 

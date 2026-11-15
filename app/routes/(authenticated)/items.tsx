@@ -9,6 +9,7 @@ import {
 } from "react-router";
 import type { Route } from "./+types/items";
 import { createSupabaseClient } from "~/lib/supabase.server";
+import { TEXT, pageTitle } from "~/lib/text";
 
 const PRESET_ICONS = [
   "🔑",
@@ -36,7 +37,7 @@ type CheckItem = {
 };
 
 export function meta({}: Route.MetaArgs) {
-  return [{ title: "確認項目の管理 — かくね" }];
+  return [{ title: pageTitle("確認項目の管理") }];
 }
 
 export async function loader({ request }: Route.LoaderArgs) {
@@ -72,7 +73,7 @@ export async function action({ request }: Route.ActionArgs) {
     const icon = (formData.get("icon") as string).trim() || null;
     if (!name) {
       return data(
-        { error: "項目名を入力してください", intent: "create" },
+        { error: TEXT.itemNameRequired, intent: "create" },
         { headers: responseHeaders },
       );
     }
@@ -99,7 +100,7 @@ export async function action({ request }: Route.ActionArgs) {
     const icon = (formData.get("icon") as string).trim() || null;
     if (!name) {
       return data(
-        { error: "項目名を入力してください", intent: "update", id },
+        { error: TEXT.itemNameRequired, intent: "update", id },
         { headers: responseHeaders },
       );
     }

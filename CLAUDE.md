@@ -19,7 +19,8 @@ kakune/
 │   ├── root.tsx              # HTMLシェル（viewport meta, フォント, エラーバウンダリ）
 │   ├── routes.ts             # ルート定義
 │   ├── lib/
-│   │   └── supabase.server.ts  # Supabaseクライアント生成（SSR用）
+│   │   ├── supabase.server.ts  # Supabaseクライアント生成（SSR用）
+│   │   └── text.ts             # 重複して使う文言・定数（アプリ名、pageTitle、パスワード長、曜日など）
 │   └── routes/
 │       ├── home.tsx                # /top ランディングページ
 │       ├── login.tsx               # /login ログイン・新規登録
