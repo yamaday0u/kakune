@@ -8,9 +8,15 @@ import {
 } from "react-router";
 import type { Route } from "./+types/change-password";
 import { createSupabaseClient } from "~/lib/supabase.server";
+import {
+  PASSWORD_MIN_LENGTH,
+  PASSWORD_PLACEHOLDER,
+  TEXT,
+  pageTitle,
+} from "~/lib/text";
 
 export function meta({}: Route.MetaArgs) {
-  return [{ title: "パスワード変更 — かくね" }];
+  return [{ title: pageTitle("パスワード変更") }];
 }
 
 export async function loader({ request }: Route.LoaderArgs) {
@@ -41,15 +47,15 @@ export async function action({ request }: Route.ActionArgs) {
   const newPassword = formData.get("newPassword") as string;
   const confirmPassword = formData.get("confirmPassword") as string;
 
-  if (newPassword.length < 8) {
+  if (newPassword.length < PASSWORD_MIN_LENGTH) {
     return data(
-      { error: "パスワードは8文字以上で入力してください" },
+      { error: TEXT.passwordTooShort },
       { headers: responseHeaders }
     );
   }
   if (newPassword !== confirmPassword) {
     return data(
-      { error: "パスワードが一致しません" },
+      { error: TEXT.passwordMismatch },
       { headers: responseHeaders }
     );
   }
@@ -86,7 +92,7 @@ export default function AppSettingsChangePassword() {
         <Link
           to="/settings"
           className="text-slate-400 text-xl leading-none p-1 -ml-1"
-          aria-label="戻る"
+          aria-label={TEXT.back}
         >
           ‹
         </Link>
@@ -118,8 +124,8 @@ export default function AppSettingsChangePassword() {
               type="password"
               autoComplete="new-password"
               required
-              minLength={8}
-              placeholder="8文字以上"
+              minLength={PASSWORD_MIN_LENGTH}
+              placeholder={PASSWORD_PLACEHOLDER}
               className="rounded-xl border border-slate-200 bg-slate-50 px-4 py-2.5 text-sm text-slate-700 outline-none focus:border-slate-400 focus:ring-2 focus:ring-slate-200 transition"
             />
           </div>
@@ -133,8 +139,8 @@ export default function AppSettingsChangePassword() {
               type="password"
               autoComplete="new-password"
               required
-              minLength={8}
-              placeholder="8文字以上"
+              minLength={PASSWORD_MIN_LENGTH}
+              placeholder={PASSWORD_PLACEHOLDER}
               className="rounded-xl border border-slate-200 bg-slate-50 px-4 py-2.5 text-sm text-slate-700 outline-none focus:border-slate-400 focus:ring-2 focus:ring-slate-200 transition"
             />
           </div>
@@ -150,7 +156,7 @@ export default function AppSettingsChangePassword() {
             disabled={isSubmitting}
             className="mt-1 rounded-xl bg-slate-700 text-white text-sm font-medium py-3 active:scale-95 transition-transform disabled:opacity-60"
           >
-            {isSubmitting ? "変更中..." : "パスワードを変更"}
+            {isSubmitting ? "変更中..." : TEXT.changePassword}
           </button>
         </Form>
       </section>

@@ -8,9 +8,17 @@ import {
 } from "react-router";
 import type { Route } from "./+types/login";
 import { createSupabaseClient } from "~/lib/supabase.server";
+import {
+  APP_ICON_ALT,
+  APP_NAME,
+  PASSWORD_MIN_LENGTH,
+  PASSWORD_PLACEHOLDER,
+  TEXT,
+  pageTitle,
+} from "~/lib/text";
 
 export function meta({}: Route.MetaArgs) {
-  return [{ title: "ログイン — かくね" }];
+  return [{ title: pageTitle("ログイン") }];
 }
 
 export async function loader({ request }: Route.LoaderArgs) {
@@ -91,11 +99,11 @@ export default function Login() {
           <div className="absolute inset-0 rounded-full bg-sky-100 opacity-60" />
           <img
             src="/app-icon-base.png"
-            alt="かくねアイコン"
+            alt={APP_ICON_ALT}
             className="relative w-10 h-10 object-contain"
           />
         </div>
-        <h1 className="text-3xl font-bold text-slate-700">かくね</h1>
+        <h1 className="text-3xl font-bold text-slate-700">{APP_NAME}</h1>
       </div>
 
       <div className="px-6 max-w-sm mx-auto w-full">
@@ -218,8 +226,8 @@ export default function Login() {
                     mode === "signup" ? "new-password" : "current-password"
                   }
                   required
-                  minLength={8}
-                  placeholder="8文字以上"
+                  minLength={PASSWORD_MIN_LENGTH}
+                  placeholder={PASSWORD_PLACEHOLDER}
                   className="rounded-xl border border-slate-200 bg-white px-4 py-3 text-base text-slate-700 outline-none focus:border-slate-400 focus:ring-2 focus:ring-slate-200 transition"
                 />
               </div>
@@ -237,7 +245,7 @@ export default function Login() {
                 className="mt-2 rounded-2xl bg-slate-700 text-white text-base font-medium py-4 active:scale-95 transition-transform disabled:opacity-60"
               >
                 {isSubmitting
-                  ? "処理中..."
+                  ? TEXT.processing
                   : mode === "signup"
                     ? "アカウントを作成"
                     : "ログイン"}

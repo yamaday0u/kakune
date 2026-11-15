@@ -2,6 +2,7 @@ import { data, redirect, useLoaderData } from "react-router";
 import type { Route } from "./+types/detail";
 import { createSupabaseClient } from "~/lib/supabase.server";
 import { jstTodayBounds } from "~/lib/date";
+import { TEXT } from "~/lib/text";
 
 type Log = {
   id: string;
@@ -126,7 +127,7 @@ export default function AppItemDetail() {
                   {formatTime(log.checked_at)}
                 </span>
                 {log.photo_path && (
-                  <span className="text-xs text-sky-400" aria-label="写真あり">
+                  <span className="text-xs text-sky-400" aria-label={TEXT.hasPhoto}>
                     📷
                   </span>
                 )}

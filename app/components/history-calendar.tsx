@@ -1,6 +1,11 @@
 import { useNavigate, useSearchParams, useFetcher } from "react-router";
 import { useEffect, useState } from "react";
 import { toJSTDateString } from "~/lib/date";
+import {
+  TEXT,
+  WEEKDAYS_MON_START,
+  WEEKDAYS_SUN_START,
+} from "~/lib/text";
 
 export type CalendarDay = {
   date: string; // "YYYY-MM-DD"
@@ -71,7 +76,7 @@ export function SummaryCard({
 
 // ─── CalendarGrid ──────────────────────────────────────────────────────────────
 
-const WEEKDAY_LABELS = ["月", "火", "水", "木", "金", "土", "日"];
+const WEEKDAY_LABELS = WEEKDAYS_MON_START;
 
 export function CalendarGrid({
   year,
@@ -206,8 +211,7 @@ export function DayModal({
   onClose: () => void;
 }) {
   const [year, month, d] = day.date.split("-").map(Number);
-  const weekdays = ["日", "月", "火", "水", "木", "金", "土"];
-  const weekday = weekdays[new Date(year, month - 1, d).getDay()];
+  const weekday = WEEKDAYS_SUN_START[new Date(year, month - 1, d).getDay()];
   const label = `${month}月${d}日（${weekday}）`;
 
   const [selectedItem, setSelectedItem] = useState<{
@@ -249,7 +253,7 @@ export function DayModal({
                 type="button"
                 onClick={onClose}
                 className="flex items-center justify-center min-w-11 min-h-11 -mr-2 text-xl text-slate-400 active:text-slate-600 transition-colors"
-                aria-label="閉じる"
+                aria-label={TEXT.close}
               >
                 ×
               </button>
@@ -354,7 +358,7 @@ function ItemDayDetail({
             type="button"
             onClick={onBack}
             className="flex items-center justify-center min-w-11 min-h-11 -ml-2 text-xl text-slate-400 active:text-slate-600 transition-colors shrink-0"
-            aria-label="戻る"
+            aria-label={TEXT.back}
           >
             ‹
           </button>
@@ -366,7 +370,7 @@ function ItemDayDetail({
           type="button"
           onClick={onClose}
           className="flex items-center justify-center min-w-11 min-h-11 -mr-2 text-xl text-slate-400 active:text-slate-600 transition-colors shrink-0"
-          aria-label="閉じる"
+          aria-label={TEXT.close}
         >
           ×
         </button>
@@ -420,7 +424,7 @@ function ItemDayDetail({
                     {(log.photo_path || log.photo_deleted_at) && (
                       <span
                         className="text-xs text-sky-400"
-                        aria-label="写真あり"
+                        aria-label={TEXT.hasPhoto}
                       >
                         📷
                       </span>
